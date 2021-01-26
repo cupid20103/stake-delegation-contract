@@ -1,4 +1,4 @@
-# Tokenization Of A liquidity protocol stake delegation contract
+# A liquidity protocol stake delegation contract
 
 ***
 ## 【Introduction of the A liquidity protocol stake delegation contract】
