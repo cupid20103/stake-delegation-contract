@@ -3,6 +3,8 @@
 ***
 ## 【Introduction of the A liquidity protocol stake delegation contract】
 - This is a smart contract that ...
+  - A contract should be able to vote on specific parameters in https://1inch.exchange/#/dao/governance for stake and vote delegation.
+  - automatic 1inch reward distribution to stakers.
 
 &nbsp;
 
@@ -18,10 +20,10 @@
 
 ## 【Remarks】
 - Version for following the `1inch` smart contract
-  - Solidity (Solc): v0.6.9 
+  - Solidity (Solc): v0.6.12
   - Truffle: v5.1.60
   - web3.js: v1.2.9
-  - openzeppelin-solidity: v3.1.0
+  - openzeppelin-solidity: v3.2.0
   - ganache-cli: v6.9.1 (ganache-core: 2.10.2)
 
 
@@ -64,4 +66,5 @@ $ ganache-cli
 ***
 
 ## 【References】
-- 1inch  
+- 1inch.exchange
+  - Prize on the EtherPunk: https://1inch-exchange.medium.com/1inch-supports-etherpunk-2021-hackathon-by-ethindia-5f659927b708
