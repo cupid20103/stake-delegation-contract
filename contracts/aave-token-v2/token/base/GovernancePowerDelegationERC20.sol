@@ -1,12 +1,11 @@
 // SPDX-License-Identifier: agpl-3.0
-pragma solidity 0.6.12;
-//pragma solidity 0.7.5;
+pragma solidity 0.7.5;
 
-import {SafeMath} from './aave-token-v2/open-zeppelin/SafeMath.sol';
-import {ERC20} from './aave-token-v2/open-zeppelin/ERC20.sol';
+import {SafeMath} from '../../open-zeppelin/SafeMath.sol';
+import {ERC20} from '../../open-zeppelin/ERC20.sol';
 import {
   IGovernancePowerDelegationToken
-} from './aave-token-v2/interfaces/IGovernancePowerDelegationToken.sol';
+} from '../../interfaces/IGovernancePowerDelegationToken.sol';
 
 /**
  * @notice implementation of the AAVE token contract
