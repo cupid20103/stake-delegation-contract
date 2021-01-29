@@ -1,6 +1,8 @@
 pragma solidity ^0.6.0;
 
-contract StakeDelegationEvents {
+import { StakeDelegationObjects } from "./StakeDelegationObjects.sol";
+
+contract StakeDelegationEvents is StakeDelegationObjects {
 
     /**
      * @dev emitted when a user delegates to another
