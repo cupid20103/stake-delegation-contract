@@ -88,4 +88,24 @@ contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents {
     }
 
 
+    /**
+     * @dev returns the delegated power of a user at a certain block
+     * @param user the user
+     */
+    function getPowerAtBlock(
+        address user,
+        uint256 blockNumber,
+        DelegationType delegationType
+    ) external override view returns (uint256) {
+        // (
+        //   mapping(address => mapping(uint256 => Snapshot)) storage snapshots,
+        //   mapping(address => uint256) storage snapshotsCounts,
+
+        // ) = _getDelegationDataByType(delegationType);
+
+        // return _searchByBlockNumber(snapshots, snapshotsCounts, user, blockNumber);
+    }
+
+
+
 }
