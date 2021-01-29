@@ -2,13 +2,14 @@
 pragma solidity ^0.6.0;
 
 import { StakeDelegationStorages } from "./stake-delegation/commons/StakeDelegationStorages.sol";
+import { StakeDelegationEvents } from "./StakeDelegationEvents.sol";
 import { OneInch } from "./1inch/1inch-token/OneInch.sol";
 
 
 /**
  * @notice - A liquidity protocol stake delegation contract
  */
-contract StakeDelegation is StakeDelegationStorages {
+contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents {
 
     OneInch public oneInch; /// 1inch Token
 
