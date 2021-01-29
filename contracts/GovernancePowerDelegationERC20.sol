@@ -2,11 +2,9 @@
 pragma solidity ^0.6.0;
 //pragma solidity 0.7.5;
 
-import {SafeMath} from './aave-token-v2/open-zeppelin/SafeMath.sol';
-import {ERC20} from './aave-token-v2/open-zeppelin/ERC20.sol';
-import {
-  IGovernancePowerDelegationToken
-} from './aave-token-v2/interfaces/IGovernancePowerDelegationToken.sol';
+import { SafeMath } from '@openzeppelin/contracts/math/SafeMath.sol';
+import { ERC20 } from '@openzeppelin/contracts/token/ERC20/ERC20.sol';
+import { IGovernancePowerDelegationToken } from './interfaces/IGovernancePowerDelegationToken.sol';
 
 /**
  * @notice implementation of the AAVE token contract
