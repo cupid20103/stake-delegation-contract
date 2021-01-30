@@ -70,26 +70,6 @@ contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents {
         emit DelegateChanged(delegator, delegatee, delegationType);
     }
 
-    /**
-     * @dev returns the delegation data (checkpoint, checkpointsCount, list of delegates) by delegation type
-     * NOTE: Ideal implementation would have mapped this in a struct by delegation type. Unfortunately,
-     * the AAVE token and StakeToken already include a mapping for the checkpoints, so we require contracts
-     * who inherit from this to provide access to the delegation data by overriding this method.
-     * @param delegationType the type of delegation
-     */
-    function _getDelegationDataByType(DelegationType delegationType) 
-        internal 
-        virtual 
-        view 
-        returns (
-            mapping(address => mapping(uint256 => Checkpoint)) storage, /// checkpoints
-            mapping(address => uint256) storage,                        /// checkpoints count
-            mapping(address => address) storage                         /// delegatees list
-        )
-    {
-        return (checkpoints, checkpointsCounts, delegates);
-    }
-
 
     /**
      * @dev returns the user delegatee. If a user never performed any delegation,
@@ -177,6 +157,30 @@ contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents {
         return checkpoints[user][lower].value;
     }
 
+
+    ///-------------------------------------------------------------------------------------------------------------
+    /// _getDelegationDataByType() method is always here. (in order to avoid that highlight of code become "white") 
+    ///-------------------------------------------------------------------------------------------------------------
+
+    /**
+     * @dev returns the delegation data (checkpoint, checkpointsCount, list of delegates) by delegation type
+     * NOTE: Ideal implementation would have mapped this in a struct by delegation type. Unfortunately,
+     * the AAVE token and StakeToken already include a mapping for the checkpoints, so we require contracts
+     * who inherit from this to provide access to the delegation data by overriding this method.
+     * @param delegationType the type of delegation
+     */
+    function _getDelegationDataByType(DelegationType delegationType) 
+        internal 
+        virtual 
+        view 
+        returns (
+            mapping(address => mapping(uint256 => Checkpoint)) storage, /// checkpoints
+            mapping(address => uint256) storage,                        /// checkpoints count
+            mapping(address => address) storage                         /// delegatees list
+        )
+    {
+        return (checkpoints, checkpointsCounts, delegates);
+    }
 
 
 }
