@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: agpl-3.0
 pragma solidity ^0.6.0;
 
+import { SafeMath } from '@openzeppelin/contracts/math/SafeMath.sol';
+
 import { StakeDelegationStorages } from "./stake-delegation/commons/StakeDelegationStorages.sol";
 import { StakeDelegationEvents } from "./stake-delegation/commons/StakeDelegationEvents.sol";
 import { OneInch } from "./1inch/1inch-token/OneInch.sol";
@@ -10,6 +12,7 @@ import { OneInch } from "./1inch/1inch-token/OneInch.sol";
  * @notice - A liquidity protocol stake delegation contract
  */
 contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents {
+    using SafeMath for uint256;
 
     /// @notice A checkpoint for marking number of votes from a given block
     struct Checkpoint {
@@ -23,11 +26,11 @@ contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents {
 
 
 
-    // /// @notice A record of votes checkpoints for each account, by index
-    // mapping (address => mapping (uint32 => Checkpoint)) public checkpoints;  /// [Key]: userAddress -> 
+    /// @notice A record of votes checkpoints for each account, by index
+    //mapping (address => mapping (uint32 => Checkpoint)) public checkpoints;  /// [Key]: userAddress -> 
 
-    // /// @notice The number of checkpoints for each account
-    // mapping (address => uint32) public checkpointsCounts;
+    /// @notice The number of checkpoints for each account
+    //mapping (address => uint32) public checkpointsCounts;
 
 
     OneInch public oneInch; /// 1inch Token
@@ -66,7 +69,7 @@ contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents {
 
         delegates[delegator] = delegatee;
 
-        //_moveDelegatesByType(previousDelegatee, delegatee, delegatorBalance, delegationType);
+        _moveDelegatesByType(previousDelegatee, delegatee, delegatorBalance, delegationType);
         emit DelegateChanged(delegator, delegatee, delegationType);
     }
 
@@ -155,6 +158,100 @@ contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents {
               }
         }
         return checkpoints[user][lower].value;
+    }
+
+   /**
+    * @dev moves delegated power from one user to another
+    * @param from the user from which delegated power is moved
+    * @param to the user that will receive the delegated power
+    * @param amount the amount of delegated power to be moved
+    * @param delegationType the type of delegation (VOTING_POWER, PROPOSITION_POWER)
+    **/
+    function _moveDelegatesByType(
+        address from,
+        address to,
+        uint256 amount,
+        DelegationType delegationType
+    ) internal {
+        if (from == to) {
+          return;
+        }
+
+        (
+            mapping(address => mapping(uint256 => Checkpoint)) storage checkpoints,
+            mapping(address => uint256) storage checkpointsCounts,
+        ) = _getDelegationDataByType(delegationType);
+
+        if (from != address(0)) {
+            uint256 previous = 0;
+            uint256 fromCheckpointsCount = checkpointsCounts[from];
+
+            if (fromCheckpointsCount != 0) {
+                previous = checkpoints[from][fromCheckpointsCount - 1].value;
+            } else {
+                previous = oneInch.balanceOf(from);
+            }
+
+            _writeCheckpoint(
+                checkpoints,
+                checkpointsCounts,
+                from,
+                uint128(previous),
+                uint128(previous.sub(amount))
+            );
+
+            emit DelegatedPowerChanged(from, previous.sub(amount), delegationType);
+        }
+
+        if (to != address(0)) {
+            uint256 previous = 0;
+            uint256 toCheckpointsCount = checkpointsCounts[to];
+            if (toCheckpointsCount != 0) {
+                previous = checkpoints[to][toCheckpointsCount - 1].value;
+            } else {
+                previous = oneInch.balanceOf(to);
+            }
+
+            _writeCheckpoint(
+                checkpoints,
+                checkpointsCounts,
+                to,
+                uint128(previous),
+                uint128(previous.add(amount))
+            );
+
+            emit DelegatedPowerChanged(to, previous.add(amount), delegationType);
+        }
+    }
+
+    /**
+     * @dev Writes a checkpoint for an owner of tokens
+     * @param owner The owner of the tokens
+     * @param oldValue The value before the operation that is gonna be executed after the checkpoint
+     * @param newValue The value after the operation
+     */
+    function _writeCheckpoint(
+        mapping(address => mapping(uint256 => Checkpoint)) storage checkpoints,
+        mapping(address => uint256) storage checkpointsCounts,
+        address owner,
+        uint128 oldValue,
+        uint128 newValue
+    ) internal {
+        uint128 currentBlock = uint128(block.number);
+
+        uint256 ownerCheckpointsCount = checkpointsCounts[owner];
+        mapping(uint256 => Checkpoint) storage checkpointsOwner = checkpoints[owner];
+
+        // Doing multiple operations in the same block
+        if (
+          ownerCheckpointsCount != 0 &&
+          checkpointsOwner[ownerCheckpointsCount - 1].blockNumber == currentBlock
+        ) {
+          checkpointsOwner[ownerCheckpointsCount - 1].value = newValue;
+        } else {
+          checkpointsOwner[ownerCheckpointsCount] = Checkpoint(currentBlock, newValue);
+          checkpointsCounts[owner] = ownerCheckpointsCount + 1;
+        }
     }
 
 
