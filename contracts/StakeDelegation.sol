@@ -13,15 +13,15 @@ contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents {
 
     /// @notice A checkpoint for marking number of votes from a given block
     struct Checkpoint {
-        uint128 blockNumber;
-        uint128 value;
+        uint128 blockNumber;  /// from block.number
+        uint128 value;        /// Voting value (Voting Power) 
     }
 
-    /// @notice A record of votes checkpoints for each account, by index
-    mapping (address => mapping (uint32 => Checkpoint)) public checkpoints;
+    // /// @notice A record of votes checkpoints for each account, by index
+    // mapping (address => mapping (uint32 => Checkpoint)) public checkpoints;  /// [Key]: userAddress -> 
 
-    /// @notice The number of checkpoints for each account
-    mapping (address => uint32) public checkpointsCounts;
+    // /// @notice The number of checkpoints for each account
+    // mapping (address => uint32) public checkpointsCounts;
 
     OneInch public oneInch; /// 1inch Token
 
@@ -54,7 +54,7 @@ contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents {
     ) internal {
         require(delegatee != address(0), 'INVALID_DELEGATEE');
 
-        (mapping(address => address) storage delegates) = _getDelegationDataByType(delegationType);
+        (, , mapping(address => address) storage delegates) = _getDelegationDataByType(delegationType);
 
         uint256 delegatorBalance = oneInch.balanceOf(delegator);
 
@@ -77,7 +77,12 @@ contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents {
         internal 
         virtual 
         view 
-        returns (mapping(address => address) storage);
+        returns (
+            mapping(address => mapping(uint256 => Checkpoint)) storage, /// checkpoints
+            mapping(address => uint256) storage,                        /// checkpoints count
+            mapping(address => address) storage                         /// delegatees list
+        );
+
 
     /**
      * @dev returns the user delegatee. If a user never performed any delegation,
@@ -116,6 +121,53 @@ contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents {
         ) = _getDelegationDataByType(delegationType);
 
         return _searchByBlockNumber(checkpoints, checkpointsCounts, user, blockNumber);
+    }
+
+    /**
+     * @dev searches a checkpoint by block number. Uses binary search.
+     * @param checkpoints the checkpoints mapping
+     * @param checkpointsCounts the number of checkpoints
+     * @param user the user for which the checkpoint is being searched
+     * @param blockNumber the block number being searched
+     **/
+    function _searchByBlockNumber(
+        mapping(address => mapping(uint256 => Checkpoint)) storage checkpoints,
+        mapping(address => uint256) storage checkpointsCounts,
+        address user,
+        uint256 blockNumber
+    ) internal view returns (uint256) {
+        require(blockNumber <= block.number, 'INVALID_BLOCK_NUMBER');
+
+        uint256 checkpointsCount = checkpointsCounts[user];
+
+        if (checkpointsCount == 0) {
+          return oneInch.balanceOf(user);
+        }
+
+        // First check most recent balance
+        if (checkpoints[user][checkpointsCount - 1].blockNumber <= blockNumber) {
+          return checkpoints[user][checkpointsCount - 1].value;
+        }
+
+        // Next check implicit zero balance
+        if (checkpoints[user][0].blockNumber > blockNumber) {
+          return 0;
+        }
+
+        uint256 lower = 0;
+        uint256 upper = checkpointsCount - 1;
+        while (upper > lower) {
+              uint256 center = upper - (upper - lower) / 2; // ceil, avoiding overflow
+              Checkpoint memory checkpoint = checkpoints[user][center];
+              if (checkpoint.blockNumber == blockNumber) {
+                return checkpoint.value;
+              } else if (checkpoint.blockNumber < blockNumber) {
+                lower = center;
+              } else {
+                upper = center - 1;
+              }
+        }
+        return checkpoints[user][lower].value;
     }
 
 
