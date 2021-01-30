@@ -17,11 +17,18 @@ contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents {
         uint128 value;        /// Voting value (Voting Power) 
     }
 
+    mapping(address => mapping(uint256 => Checkpoint)) checkpoints; /// checkpoints
+    mapping(address => uint256) checkpointsCounts;                        /// checkpoints count
+    mapping(address => address) delegates;                         /// delegatees list
+
+
+
     // /// @notice A record of votes checkpoints for each account, by index
     // mapping (address => mapping (uint32 => Checkpoint)) public checkpoints;  /// [Key]: userAddress -> 
 
     // /// @notice The number of checkpoints for each account
     // mapping (address => uint32) public checkpointsCounts;
+
 
     OneInch public oneInch; /// 1inch Token
 
@@ -34,9 +41,6 @@ contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents {
      * @param delegatee the user to which the power will be delegated
      */ 
     function delegate(address delegatee) public returns (bool) {
-        /// Add a new token holder address which ask delegation
-        delegationAddresses[delegatee].push(msg.sender);
-
         _delegateByType(msg.sender, delegatee, DelegationType.STAKE);
         _delegateByType(msg.sender, delegatee, DelegationType.VOTING_POWER);
         _delegateByType(msg.sender, delegatee, DelegationType.DISTRIBUTION);
@@ -81,7 +85,10 @@ contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents {
             mapping(address => mapping(uint256 => Checkpoint)) storage, /// checkpoints
             mapping(address => uint256) storage,                        /// checkpoints count
             mapping(address => address) storage                         /// delegatees list
-        );
+        )
+    {
+        return (checkpoints, checkpointsCounts, delegates);
+    }
 
 
     /**
