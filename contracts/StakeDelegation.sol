@@ -73,6 +73,19 @@ contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents {
         emit DelegateChanged(delegator, delegatee, delegationType);
     }
 
+    /**
+     * @dev returns the delegatee of an user
+     * @param delegator the address of the delegator
+     **/
+    function getDelegateeByType(address delegator, DelegationType delegationType)
+        external
+        view
+        returns (address)
+    {
+        (, , mapping(address => address) storage delegates) = _getDelegationDataByType(delegationType);
+
+        return _getDelegatee(delegator, delegates);
+    }
 
     /**
      * @dev returns the user delegatee. If a user never performed any delegation,
@@ -93,7 +106,6 @@ contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents {
 
         return previousDelegatee;
     }
-
 
     /**
      * @dev returns the delegated power of a user at a certain block
