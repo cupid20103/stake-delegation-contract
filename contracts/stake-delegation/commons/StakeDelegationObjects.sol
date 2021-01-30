@@ -1,6 +1,6 @@
 pragma solidity ^0.6.0;
 
-contract StakeDelegationObjects {
+abstract contract StakeDelegationObjects {
 
     /**
      * @notice - delegationType the type of delegation (VOTING_POWER, PROPOSITION_POWER)
