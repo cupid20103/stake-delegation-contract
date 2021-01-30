@@ -11,6 +11,18 @@ import { OneInch } from "./1inch/1inch-token/OneInch.sol";
  */
 contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents {
 
+    /// @notice A checkpoint for marking number of votes from a given block
+    struct Checkpoint {
+        uint128 blockNumber;
+        uint128 value;
+    }
+
+    /// @notice A record of votes checkpoints for each account, by index
+    mapping (address => mapping (uint32 => Checkpoint)) public checkpoints;
+
+    /// @notice The number of checkpoints for each account
+    mapping (address => uint32) public checkpointsCounts;
+
     OneInch public oneInch; /// 1inch Token
 
     constructor(OneInch _oneInch) public {
@@ -55,9 +67,9 @@ contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents {
     }
 
     /**
-     * @dev returns the delegation data (snapshot, snapshotsCount, list of delegates) by delegation type
+     * @dev returns the delegation data (checkpoint, checkpointsCount, list of delegates) by delegation type
      * NOTE: Ideal implementation would have mapped this in a struct by delegation type. Unfortunately,
-     * the AAVE token and StakeToken already include a mapping for the snapshots, so we require contracts
+     * the AAVE token and StakeToken already include a mapping for the checkpoints, so we require contracts
      * who inherit from this to provide access to the delegation data by overriding this method.
      * @param delegationType the type of delegation
      */
@@ -96,14 +108,14 @@ contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents {
         address user,
         uint256 blockNumber,
         DelegationType delegationType
-    ) external override view returns (uint256) {
-        // (
-        //   mapping(address => mapping(uint256 => Snapshot)) storage snapshots,
-        //   mapping(address => uint256) storage snapshotsCounts,
+    ) external view returns (uint256) {
+        (
+          mapping(address => mapping(uint256 => Checkpoint)) storage checkpoints,
+          mapping(address => uint256) storage checkpointsCounts,
 
-        // ) = _getDelegationDataByType(delegationType);
+        ) = _getDelegationDataByType(delegationType);
 
-        // return _searchByBlockNumber(snapshots, snapshotsCounts, user, blockNumber);
+        return _searchByBlockNumber(checkpoints, checkpointsCounts, user, blockNumber);
     }
 
 
