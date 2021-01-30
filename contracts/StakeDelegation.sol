@@ -20,11 +20,9 @@ contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents {
         uint128 value;        /// Voting value (Voting Power) 
     }
 
-    mapping(address => mapping(uint256 => Checkpoint)) checkpoints; /// checkpoints
-    mapping(address => uint256) checkpointsCounts;                        /// checkpoints count
-    mapping(address => address) delegates;                         /// delegatees list
-
-
+    mapping(address => mapping(uint256 => Checkpoint)) checkpoints;  /// checkpoints
+    mapping(address => uint256) checkpointsCounts;                   /// checkpoints count
+    mapping(address => address) delegates;                           /// delegatees list
 
     /// @notice A record of votes checkpoints for each account, by index
     //mapping (address => mapping (uint32 => Checkpoint)) public checkpoints;  /// [Key]: userAddress -> 
@@ -32,6 +30,14 @@ contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents {
     /// @notice The number of checkpoints for each account
     //mapping (address => uint32) public checkpointsCounts;
 
+    /// @notice The EIP-712 typehash for the delegation struct used by the contract
+    bytes32 public constant DELEGATE_BY_TYPE_TYPEHASH = keccak256(
+        'DelegateByType(address delegatee,uint256 type,uint256 nonce,uint256 expiry)'
+    );
+
+    bytes32 public constant DELEGATE_TYPEHASH = keccak256(
+        'Delegate(address delegatee,uint256 nonce,uint256 expiry)'
+    );
 
     OneInch public oneInch; /// 1inch Token
 
