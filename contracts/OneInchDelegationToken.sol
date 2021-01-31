@@ -25,21 +25,6 @@ contract OneInchDelegationToken is ERC20, StakeDelegation {
     }
 
 
-    ///-------------------------------------------------------
-    /// Main methods of the 1inch delegation token
-    ///-------------------------------------------------------
-    
-    function delegateStaking() public returns (bool) {}
-    
-    function delegateVoting() public returns (bool) {}
-    
-    function delegateDistribution() public returns (bool) {}
-
-
-
-
-
-
     ///--------------------------------------------------------
     /// EIP-712 related methods of the 1inch delegation token
     ///--------------------------------------------------------
