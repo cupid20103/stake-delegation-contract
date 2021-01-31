@@ -8,7 +8,7 @@ import { OneInch } from "./1inch/1inch-token/OneInch.sol";
 
 /**
  * @notice - The OneInchDelegationToken contract does this and that...
- * @dev -  
+ * @dev - This contract will be deployed
  */
 contract OneInchDelegationToken is ERC20, StakeDelegation {
 
@@ -23,5 +23,26 @@ contract OneInchDelegationToken is ERC20, StakeDelegation {
     {
         /// [Todo]: Add somthing to here
     }
+
+
+    ///-------------------------------------------------------
+    /// Main methods of the 1inch delegation token
+    ///-------------------------------------------------------
     
+    function delegateStaking() public returns (bool) {}
+    
+    function delegateVoting() public returns (bool) {}
+    
+    function delegateDistribution() public returns (bool) {}
+
+
+
+
+
+
+    ///--------------------------------------------------------
+    /// EIP-712 related methods of the 1inch delegation token
+    ///--------------------------------------------------------
+    
+
 }
