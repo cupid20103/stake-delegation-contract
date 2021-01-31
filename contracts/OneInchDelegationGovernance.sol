@@ -9,7 +9,7 @@ import { SafeMath } from '@openzeppelin/contracts/math/SafeMath.sol';
 
 
 /**
- * @notice - The OneInchDelegationGovernance contract
+ * @notice - The OneInchDelegationGovernance contract that control staking, voting, reward destribution
  */
 contract OneInchDelegationGovernance is StakeDelegationStorages, StakeDelegationEvents {
     using SafeMath for uint256;
@@ -31,7 +31,7 @@ contract OneInchDelegationGovernance is StakeDelegationStorages, StakeDelegation
     
     function delegateVoting() public returns (bool) {}
     
-    function delegateDistribution() public returns (bool) {}
+    function delegateRewardDistribution() public returns (bool) {}
 
 
 }
