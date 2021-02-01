@@ -76,5 +76,11 @@ contract("StakeDelegation", function(accounts) {
         });
     });
 
+    describe("OneInchDelegationManager", () => {
+        it("should be delegated by the StakeDelegation contract address", async () => {
+            const delegatee = STAKE_DELEGATION_1;
+            txReceipt = await oneInchDelegationManager.delegate(delegatee, { from: user1 });
+        });
+    });
 
 });
