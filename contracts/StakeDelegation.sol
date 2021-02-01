@@ -11,7 +11,8 @@ import { OneInch } from "./1inch/1inch-token/OneInch.sol";
 
 
 /**
- * @notice - A liquidity protocol stake delegation contract
+ * @notice - A liquidity protocol stake delegation contract.
+ * @notice - A contract is able to vote on specific parameters in https://1inch.exchange/#/dao/governance for stake and vote delegation and automatic 1inch reward distribution to stakers.
  */
 contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents, StakeDelegationConstants {
     using SafeMath for uint256;

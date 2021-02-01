@@ -3,18 +3,18 @@ pragma solidity ^0.6.0;
 
 import { SafeMath } from '@openzeppelin/contracts/math/SafeMath.sol';
 
-import { StakeDelegationStorages } from "./stake-delegation/commons/StakeDelegationStorages.sol";
-import { StakeDelegationEvents } from "./stake-delegation/commons/StakeDelegationEvents.sol";
-import { StakeDelegationConstants } from "./stake-delegation/commons/StakeDelegationConstants.sol";
+import { OneInchDelegationManagerStorages } from "./oneInch-delegation-manager/commons/OneInchDelegationManagerStorages.sol";
+import { OneInchDelegationManagerEvents } from "./oneInch-delegation-manager/commons/OneInchDelegationManagerEvents.sol";
+import { OneInchDelegationManagerConstants } from "./oneInch-delegation-manager/commons/OneInchDelegationManagerConstants.sol";
 
 import { OneInch } from "./1inch/1inch-token/OneInch.sol";
 
 
 /**
  * @notice - OneInchDelegationManager contract is that assign wallet address into the StakeDelegation contract
- *         - delegatee is a contract address of the StakeDelegation contract
+ *         - "delegatee" is a contract address of the StakeDelegation contract
  */
-contract OneInchDelegationManager is StakeDelegationStorages, StakeDelegationEvents, StakeDelegationConstants {
+contract OneInchDelegationManager is OneInchDelegationManagerStorages, OneInchDelegationManagerEvents, OneInchDelegationManagerConstants {
     using SafeMath for uint256;
 
     OneInch public oneInch; /// 1inch Token
