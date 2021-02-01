@@ -13,6 +13,10 @@ contract StakeDelegationFactory {
     uint8 currentStakeDelegationId; /// Count from 1
     address[] stakeDelegations;
 
+    event StakeDelegationCreated(
+        StakeDelegation stakeDelegation
+    );
+
     OneInch public oneInch;  /// 1inch Token
 
     constructor(OneInch _oneInch) public {
@@ -23,6 +27,8 @@ contract StakeDelegationFactory {
         currentStakeDelegationId++;
         StakeDelegation stakeDelegation = new StakeDelegation(oneInch);
         stakeDelegations.push(address(stakeDelegation));
+
+        emit StakeDelegationCreated(stakeDelegation);
     }
 
 

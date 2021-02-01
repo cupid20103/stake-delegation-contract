@@ -15,6 +15,9 @@ const OneInch = artifacts.require("OneInch");
 contract("StakeDelegation", function(accounts) {
     /// Acccounts
     let deployer = accounts[0];
+    let user1 = accounts[1];
+    let user2 = accounts[2];
+    let user3 = accounts[3];
 
     /// Global Tokenization contract instance
     let stakeDelegation;
@@ -51,5 +54,19 @@ contract("StakeDelegation", function(accounts) {
             ONEINCH_DELEGATION_MANAGER = oneInchDelegationManager.address;
         });
     });
+
+    describe("StakeDelegationFactory", () => {
+        it("a new StakeDelegation contract should be created", async () => {
+            txReceipt = await stakeDelegationFactory.createNewStakeDelegation({ from: user1 });
+
+            let events = await stakeDelegationFactory.getPastEvents('StakeDelegationCreated', {
+                filter: {},  /// [Note]: If "index" is used for some event property, index number is specified
+                fromBlock: 0,
+                toBlock: 'latest'
+            });
+            console.log("\n=== Event log of StakeDelegationCreated ===", events[0].returnValues);  /// [Result]: Successful to retrieve event log
+        });
+    });
+
 
 });
