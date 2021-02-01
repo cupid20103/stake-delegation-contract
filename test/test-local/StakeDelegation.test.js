@@ -78,8 +78,16 @@ contract("StakeDelegation", function(accounts) {
 
     describe("OneInchDelegationManager", () => {
         it("should be delegated by the StakeDelegation contract address", async () => {
+            /// [Note]: One of the StakeDelegation contract address (created by the StakeDelegationFactory contract) is assigned as a parameter of delegate() method
             const delegatee = STAKE_DELEGATION_1;
             txReceipt = await oneInchDelegationManager.delegate(delegatee, { from: user1 });
+
+            let events = await oneInchDelegationManager.getPastEvents('DelegateChanged', {
+                filter: {},  /// [Note]: If "index" is used for some event property, index number is specified
+                fromBlock: 0,
+                toBlock: 'latest'
+            });
+            console.log("\n=== Event log of DelegateChanged ===", events[0].returnValues);  /// [Result]: Successful to retrieve event log
         });
     });
 
