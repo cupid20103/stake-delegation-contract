@@ -20,13 +20,17 @@ contract("StakeDelegation", function(accounts) {
     let user3 = accounts[3];
 
     /// Global Tokenization contract instance
-    let stakeDelegation;
+    let stakeDelegation1;
+    let stakeDelegation2;
+    let StakeDelegation3;
     let stakeDelegationFactory;
     let oneInchDelegationManager;
     let oneInch;
 
     /// Global variable for each contract addresses
-    let STAKE_DELEGATION;
+    let STAKE_DELEGATION_1;
+    let STAKE_DELEGATION_2;
+    let STAKE_DELEGATION_3;
     let STAKE_DELEGATION_FACTORY;
     let ONEINCH_DELEGATION_MANAGER;
     let ONEINCH;
@@ -59,12 +63,16 @@ contract("StakeDelegation", function(accounts) {
         it("a new StakeDelegation contract should be created", async () => {
             txReceipt = await stakeDelegationFactory.createNewStakeDelegation({ from: user1 });
 
+            /// [Note]: Retrieve an event log via web3.js v1.0.0
             let events = await stakeDelegationFactory.getPastEvents('StakeDelegationCreated', {
                 filter: {},  /// [Note]: If "index" is used for some event property, index number is specified
                 fromBlock: 0,
                 toBlock: 'latest'
             });
             console.log("\n=== Event log of StakeDelegationCreated ===", events[0].returnValues);  /// [Result]: Successful to retrieve event log
+
+            STAKE_DELEGATION_1 = events[0].returnValues.stakeDelegation;
+            console.log("\n=== STAKE_DELEGATION_1 ===", STAKE_DELEGATION_1);
         });
     });
 
