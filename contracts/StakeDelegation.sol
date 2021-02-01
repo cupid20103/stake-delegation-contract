@@ -52,7 +52,7 @@ contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents {
     function delegate(address delegatee) public returns (bool) {
         _delegateByType(msg.sender, delegatee, DelegationType.STAKE);
         _delegateByType(msg.sender, delegatee, DelegationType.VOTING_POWER);
-        _delegateByType(msg.sender, delegatee, DelegationType.DISTRIBUTION);
+        _delegateByType(msg.sender, delegatee, DelegationType.REWARD_DISTRIBUTION);
     }
     
     /**
