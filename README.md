@@ -50,15 +50,16 @@ $ npm run migrate:local
 ### ③ Test (Mainnet-fork approach)
 - 1: Start ganache-cli
 ```
-$ ganache-cli
+$ ganache-cli -d
 ```
+(※ `-d` option is the option in order to be able to use same address on Ganache-CLI every time)
 
 <br>
 
-- 3: Execute test of the smart-contracts (on the local)
+- 2: Execute test of the smart-contracts (on the local)
   - Test for the contract
-    `$ npm run test:something`
-    ($ truffle test ./test/test-local/Something.test.js)
+    `$ npm run test:delegation`
+    ($ truffle test ./test/test-local/StakeDelegation.test.js)
 
 <br>
 
