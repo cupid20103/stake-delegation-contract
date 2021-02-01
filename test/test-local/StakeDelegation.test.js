@@ -62,12 +62,20 @@ contract("StakeDelegation", function(accounts) {
     describe("Check initial status", () => {
         it("TotalSupply of 1inch token should be 1,500,000,000", async () => {
             _totalSupply = await oneInch.totalSupply({ from: deployer });
-            console.log("\n=== _totalSupply ===", String(web3.utils.fromWei(_totalSupply, 'ether')));
+            console.log("\n=== totalSupply of 1inch token ===", String(web3.utils.fromWei(_totalSupply, 'ether')));
             assert.equal(
                 String(web3.utils.fromWei(_totalSupply, 'ether')),
                 "1500000000",
                 "TotalSupply of 1inch token should be 1,500,000,000",
             );
+        });
+
+        it("1,000 1inch token should be minted to 3 users (wallet addresses)", async () => {
+            const owner = deployer;
+            const mintAmount = web3.utils.toWei('1000', 'ether');  /// 1000 1inch tokens
+            txReceipt1 = await oneInch.mint(user1, mintAmount, { from: owner });
+            txReceipt2 = await oneInch.mint(user2, mintAmount, { from: owner });
+            txReceipt3 = await oneInch.mint(user3, mintAmount, { from: owner });
         });
     });
 
