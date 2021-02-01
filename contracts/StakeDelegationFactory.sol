@@ -10,6 +10,7 @@ import { OneInch } from "./1inch/1inch-token/OneInch.sol";
  */
 contract StakeDelegationFactory {
 
+    uint8 currentStakeDelegationId; /// Count from 1
     address[] stakeDelegations;
 
     OneInch public oneInch;  /// 1inch Token
@@ -18,9 +19,24 @@ contract StakeDelegationFactory {
         oneInch = _oneInch;
     }
 
-    function createNewStakeDelegationContract() public returns (bool) {
+    function createNewStakeDelegation() public returns (bool) {
+        currentStakeDelegationId++;
         StakeDelegation stakeDelegation = new StakeDelegation(oneInch);
         stakeDelegations.push(address(stakeDelegation));
     }
 
+
+    ///--------------------------------------------
+    /// Getter Methods
+    ///--------------------------------------------
+
+    function getStakeDelegations() public view returns (address[] memory _stakeDelegations) {
+        return stakeDelegations;
+    }
+
+    function getStakeDelegation(uint8 stakeDelegationId) public view returns (address _stakeDelegation) {
+        uint8 index = stakeDelegationId - 1;
+        return stakeDelegations[index];
+    }
+    
 }
