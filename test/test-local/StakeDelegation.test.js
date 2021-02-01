@@ -59,6 +59,18 @@ contract("StakeDelegation", function(accounts) {
         });
     });
 
+    describe("Check initial status", () => {
+        it("TotalSupply of 1inch token should be 1,500,000,000", async () => {
+            _totalSupply = await oneInch.totalSupply({ from: deployer });
+            console.log("\n=== _totalSupply ===", String(web3.utils.fromWei(_totalSupply, 'ether')));
+            assert.equal(
+                String(web3.utils.fromWei(_totalSupply, 'ether')),
+                "1500000000",
+                "TotalSupply of 1inch token should be 1,500,000,000",
+            );
+        });
+    });
+
     describe("StakeDelegationFactory", () => {
         it("a new StakeDelegation contract should be created", async () => {
             txReceipt = await stakeDelegationFactory.createNewStakeDelegation({ from: user1 });
