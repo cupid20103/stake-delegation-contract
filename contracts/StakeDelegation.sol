@@ -5,39 +5,16 @@ import { SafeMath } from '@openzeppelin/contracts/math/SafeMath.sol';
 
 import { StakeDelegationStorages } from "./stake-delegation/commons/StakeDelegationStorages.sol";
 import { StakeDelegationEvents } from "./stake-delegation/commons/StakeDelegationEvents.sol";
+import { StakeDelegationConstants } from "./stake-delegation/commons/StakeDelegationConstants.sol";
+
 import { OneInch } from "./1inch/1inch-token/OneInch.sol";
 
 
 /**
  * @notice - A liquidity protocol stake delegation contract
  */
-contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents {
+contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents, StakeDelegationConstants {
     using SafeMath for uint256;
-
-    /// @notice A checkpoint for marking number of votes from a given block
-    struct Checkpoint {
-        uint128 blockNumber;  /// from block.number
-        uint128 value;        /// Voting value (Voting Power) 
-    }
-
-    mapping(address => mapping(uint256 => Checkpoint)) checkpoints;  /// checkpoints
-    mapping(address => uint256) checkpointsCounts;                   /// checkpoints count
-    mapping(address => address) delegates;                           /// delegatees list
-
-    /// @notice A record of votes checkpoints for each account, by index
-    //mapping (address => mapping (uint32 => Checkpoint)) public checkpoints;  /// [Key]: userAddress -> 
-
-    /// @notice The number of checkpoints for each account
-    //mapping (address => uint32) public checkpointsCounts;
-
-    /// @notice The EIP-712 typehash for the delegation struct used by the contract
-    bytes32 public constant DELEGATE_BY_TYPE_TYPEHASH = keccak256(
-        'DelegateByType(address delegatee,uint256 type,uint256 nonce,uint256 expiry)'
-    );
-
-    bytes32 public constant DELEGATE_TYPEHASH = keccak256(
-        'Delegate(address delegatee,uint256 nonce,uint256 expiry)'
-    );
 
     OneInch public oneInch; /// 1inch Token
 
