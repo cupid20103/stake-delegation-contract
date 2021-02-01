@@ -4,6 +4,4 @@ import { StakeDelegationObjects } from "./StakeDelegationObjects.sol";
 
 contract StakeDelegationStorages is StakeDelegationObjects {
 
-    mapping (address => address[]) delegationAddresses;
-
 }
