@@ -2,6 +2,9 @@
 const Web3 = require('web3');
 const web3 = new Web3(new Web3.providers.WebsocketProvider('ws://localhost:8545'));
 
+/// Openzeppelin test-helper
+const { time } = require('@openzeppelin/test-helpers');
+
 /// Artifact of smart contracts 
 const StakeDelegation = artifacts.require("StakeDelegation");
 const StakeDelegationFactory = artifacts.require("StakeDelegationFactory");
@@ -34,6 +37,11 @@ contract("StakeDelegation", function(accounts) {
     let STAKE_DELEGATION_FACTORY;
     let ONEINCH_DELEGATION_MANAGER;
     let ONEINCH;
+
+    /// Global variable for saving block number
+    let firstActionBlockNumber = 0;
+    let secondActionBlockNumber = 0;
+
 
     describe("Check state in advance", () => {
         it("Check all accounts", async () => {
@@ -108,7 +116,42 @@ contract("StakeDelegation", function(accounts) {
                 toBlock: 'latest'
             });
             console.log("\n=== Event log of DelegateChanged ===", events[0].returnValues);  /// [Result]: Successful to retrieve event log
+
+            /// Save block number
+            firstActionBlockNumber = await time.latestBlock();  /// Get the latest block number
+            console.log("\n=== firstActionBlockNumber ===", String(firstActionBlockNumber));
         });
+
+        it("getPowerAtBlock of user1 should be 0", async () => {
+            const user = user1;
+            const blockNumber = Number(String(firstActionBlockNumber));
+            const delegationType = 0;  /// [Note]: "0" indicates "STAKE" that is defined in the DelegationType enum
+            const _powerAtBlock = await oneInchDelegationManager.getPowerAtBlock(user, blockNumber, delegationType, { from: user1 });
+            const powerAtBlock = web3.utils.fromWei(String(_powerAtBlock), 'ether');
+            console.log("\n=== powerAtBlock of user1 ===", powerAtBlock);
+
+            assert.equal(
+                powerAtBlock,
+                "0",
+                "PowerAtBlock of user1 should be 0"
+            );
+        });
+
+        it("getPowerAtBlock of STAKE_DELEGATION_1 should be 1000", async () => {
+            const user = STAKE_DELEGATION_1;
+            const blockNumber = Number(String(firstActionBlockNumber));
+            const delegationType = 0;  /// [Note]: "0" indicates "STAKE" that is defined in the DelegationType enum
+            const _powerAtBlock = await oneInchDelegationManager.getPowerAtBlock(user, blockNumber, delegationType, { from: user1 });
+            const powerAtBlock = web3.utils.fromWei(String(_powerAtBlock), 'ether');
+            console.log("\n=== powerAtBlock of STAKE_DELEGATION_1 ===", powerAtBlock);            
+
+            assert.equal(
+                powerAtBlock,
+                "1000",
+                "PowerAtBlock of user1 should be 1000"
+            );
+        });
+
     });
 
 });
