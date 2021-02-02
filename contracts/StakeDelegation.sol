@@ -30,7 +30,9 @@ contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents, Stak
     /// Main methods of the 1inch delegation token
     ///-------------------------------------------------------
     
-    function delegateStaking() public returns (bool) {}
+    function delegateStaking(uint stakeAmount) public returns (bool) {
+        stOneInch.stake(stakeAmount);
+    }
     
     function delegateVoting() public returns (bool) {}
     
