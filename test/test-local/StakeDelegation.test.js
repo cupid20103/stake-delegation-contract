@@ -126,16 +126,30 @@ contract("StakeDelegation", function(accounts) {
             const user = user1;
             const blockNumber = Number(String(firstActionBlockNumber));
             const delegationType = 0;  /// [Note]: "0" indicates "STAKE" that is defined in the DelegationType enum
-            powerAtBlock = await oneInchDelegationManager.getPowerAtBlock(user, blockNumber, delegationType, { from: user1 });
-            console.log("\n=== powerAtBlock of user1 ===", String(powerAtBlock));            
+            const _powerAtBlock = await oneInchDelegationManager.getPowerAtBlock(user, blockNumber, delegationType, { from: user1 });
+            const powerAtBlock = web3.utils.fromWei(String(_powerAtBlock), 'ether');
+            console.log("\n=== powerAtBlock of user1 ===", powerAtBlock);
+
+            assert.equal(
+                powerAtBlock,
+                "0",
+                "PowerAtBlock of user1 should be 0"
+            );
         });
 
-        it("getPowerAtBlock of STAKE_DELEGATION_1 should be ~~", async () => {
+        it("getPowerAtBlock of STAKE_DELEGATION_1 should be 1000", async () => {
             const user = STAKE_DELEGATION_1;
             const blockNumber = Number(String(firstActionBlockNumber));
             const delegationType = 0;  /// [Note]: "0" indicates "STAKE" that is defined in the DelegationType enum
-            powerAtBlock = await oneInchDelegationManager.getPowerAtBlock(user, blockNumber, delegationType, { from: user1 });
-            console.log("\n=== powerAtBlock of STAKE_DELEGATION_1 ===", String(powerAtBlock));            
+            const _powerAtBlock = await oneInchDelegationManager.getPowerAtBlock(user, blockNumber, delegationType, { from: user1 });
+            const powerAtBlock = web3.utils.fromWei(String(_powerAtBlock), 'ether');
+            console.log("\n=== powerAtBlock of STAKE_DELEGATION_1 ===", powerAtBlock);            
+
+            assert.equal(
+                powerAtBlock,
+                "1000",
+                "PowerAtBlock of user1 should be 1000"
+            );
         });
 
     });
