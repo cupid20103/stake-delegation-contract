@@ -69,3 +69,9 @@ $ ganache-cli -d
 ## 【References】
 - 1inch.exchange
   - Prize on the EtherPunk: https://1inch-exchange.medium.com/1inch-supports-etherpunk-2021-hackathon-by-ethindia-5f659927b708
+
+  - Smart contract
+    - 1inch token staked (st1INCH): https://etherscan.io/address/0xa0446d8804611944f1b527ecd37d7dcbe442caba#code
+
+
+
