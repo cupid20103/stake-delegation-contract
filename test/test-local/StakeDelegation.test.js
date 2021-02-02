@@ -3,13 +3,7 @@ const Web3 = require('web3');
 const web3 = new Web3(new Web3.providers.WebsocketProvider('ws://localhost:8545'));
 
 /// Openzeppelin test-helper
-const {
-  time,
-  BN,           // Big Number support
-  constants,    // Common constants, like the zero address and largest integers
-  expectEvent,  // Assertions for emitted events
-  expectRevert, // Assertions for transactions that should fail
-} = require('@openzeppelin/test-helpers');
+const { time } = require('@openzeppelin/test-helpers');
 
 /// Artifact of smart contracts 
 const StakeDelegation = artifacts.require("StakeDelegation");
@@ -43,6 +37,11 @@ contract("StakeDelegation", function(accounts) {
     let STAKE_DELEGATION_FACTORY;
     let ONEINCH_DELEGATION_MANAGER;
     let ONEINCH;
+
+    /// Global variable for saving block number
+    let firstActionBlockNumber = 0;
+    let secondActionBlockNumber = 0;
+
 
     describe("Check state in advance", () => {
         it("Check all accounts", async () => {
@@ -117,12 +116,18 @@ contract("StakeDelegation", function(accounts) {
                 toBlock: 'latest'
             });
             console.log("\n=== Event log of DelegateChanged ===", events[0].returnValues);  /// [Result]: Successful to retrieve event log
+
+            /// Save block number
+            firstActionBlockNumber = await time.latestBlock();  /// Get the latest block number
+            console.log("\n=== firstActionBlockNumber", String(firstActionBlockNumber));
         });
 
         it("getPowerAtBlock should be", async () => {
-            
-
-            getPowerAtBlock
+            const user = user1;
+            const blockNumber = Number(String(firstActionBlockNumber));
+            const delegationType = 0;  /// [Note]: "0" indicates "STAKE" that is defined in the DelegationType enum
+            powerAtBlock = await oneInchDelegationManager.getPowerAtBlock(user, blockNumber, delegationType, { from: user1 });
+            console.log("\n=== powerAtBlock", String(powerAtBlock));            
         });
     });
 
