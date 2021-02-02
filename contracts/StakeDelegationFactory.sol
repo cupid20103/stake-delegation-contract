@@ -3,6 +3,7 @@ pragma solidity ^0.6.0;
 
 import { StakeDelegation } from "./StakeDelegation.sol";
 import { OneInch } from "./1inch/1inch-token/OneInch.sol";
+import { GovernanceMothership } from "./1inch/1inch-token-staked/st-1inch/GovernanceMothership.sol";
 
 
 /**
@@ -17,15 +18,17 @@ contract StakeDelegationFactory {
         StakeDelegation stakeDelegation
     );
 
-    OneInch public oneInch;  /// 1inch Token
+    OneInch public oneInch;                 /// 1INCH Token
+    GovernanceMothership public stOneInch;  /// st1INCH token
 
-    constructor(OneInch _oneInch) public {
+    constructor(OneInch _oneInch, GovernanceMothership _stOneInch) public {
         oneInch = _oneInch;
+        stOneInch = _stOneInch;
     }
 
     function createNewStakeDelegation() public returns (bool) {
         currentStakeDelegationId++;
-        StakeDelegation stakeDelegation = new StakeDelegation(oneInch);
+        StakeDelegation stakeDelegation = new StakeDelegation(oneInch, stOneInch);
         stakeDelegations.push(address(stakeDelegation));
 
         emit StakeDelegationCreated(stakeDelegation);
