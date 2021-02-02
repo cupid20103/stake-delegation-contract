@@ -117,6 +117,7 @@ contract("StakeDelegation", function(accounts) {
             /// [Note]: One of the StakeDelegation contract address (created by the StakeDelegationFactory contract) is assigned as a parameter of delegate() method
             const delegatee = STAKE_DELEGATION_1;
             const delegatedAmount = web3.utils.toWei('500', 'ether');
+            await oneInch.approve(ONEINCH_DELEGATION_MANAGER, delegatedAmount, { from: user1 });
             txReceipt = await oneInchDelegationManager.delegate(delegatee, delegatedAmount, { from: user1 });
 
             let events = await oneInchDelegationManager.getPastEvents('DelegateChanged', {
