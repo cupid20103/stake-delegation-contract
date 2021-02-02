@@ -25,9 +25,15 @@ contract OneInchDelegationManager is OneInchDelegationManagerStorages, OneInchDe
 
     /**
      * @notice - Delegates all the powers to a specific user (address of delegatee)
-     * @param delegatee the user to which the power will be delegated
+     * @param delegatee - The user to which the power will be delegated
+     * @param delegatedAmount - 1INCH tokens amount delegated by a user (caller)  
      */ 
-    function delegate(address delegatee) public returns (bool) {
+    function delegate(address delegatee, uint delegatedAmount) public returns (bool) {
+        /// Transfer 1INCH tokens into a delegatee address
+        oneInch.transferFrom(msg.sender, address(this), delegatedAmount);
+        oneInch.transfer(delegatee, delegatedAmount);
+
+        /// Delegate
         _delegateByType(msg.sender, delegatee, DelegationType.STAKE);
         _delegateByType(msg.sender, delegatee, DelegationType.VOTING_POWER);
         _delegateByType(msg.sender, delegatee, DelegationType.REWARD_DISTRIBUTION);

@@ -10,6 +10,7 @@ const StakeDelegation = artifacts.require("StakeDelegation");
 const StakeDelegationFactory = artifacts.require("StakeDelegationFactory");
 const OneInchDelegationManager = artifacts.require("OneInchDelegationManager");
 const OneInch = artifacts.require("OneInch");
+const GovernanceMothership = artifacts.require("GovernanceMothership");
 
 
 /***
@@ -29,6 +30,7 @@ contract("StakeDelegation", function(accounts) {
     let stakeDelegationFactory;
     let oneInchDelegationManager;
     let oneInch;
+    let stOneInch;
 
     /// Global variable for each contract addresses
     let STAKE_DELEGATION_1;
@@ -37,6 +39,7 @@ contract("StakeDelegation", function(accounts) {
     let STAKE_DELEGATION_FACTORY;
     let ONEINCH_DELEGATION_MANAGER;
     let ONEINCH;
+    let ST_ONEINCH;
 
     /// Global variable for saving block number
     let firstActionBlockNumber = 0;
@@ -56,8 +59,13 @@ contract("StakeDelegation", function(accounts) {
             ONEINCH = oneInch.address;
         });
 
+        it("Deploy the GovernanceMothership contract instance (stOneInch)", async () => {
+            stOneInch = await GovernanceMothership.new(ONEINCH, { from: deployer });
+            ST_ONEINCH = stOneInch.address;
+        });
+
         it("Deploy the StakeDelegationFactory contract instance", async () => {
-            stakeDelegationFactory = await StakeDelegationFactory.new(ONEINCH, { from: deployer });
+            stakeDelegationFactory = await StakeDelegationFactory.new(ONEINCH, ST_ONEINCH, { from: deployer });
             STAKE_DELEGATION_FACTORY = stakeDelegationFactory.address;
         });
 
@@ -108,7 +116,9 @@ contract("StakeDelegation", function(accounts) {
         it("should be delegated by the StakeDelegation contract address", async () => {
             /// [Note]: One of the StakeDelegation contract address (created by the StakeDelegationFactory contract) is assigned as a parameter of delegate() method
             const delegatee = STAKE_DELEGATION_1;
-            txReceipt = await oneInchDelegationManager.delegate(delegatee, { from: user1 });
+            const delegatedAmount = web3.utils.toWei('500', 'ether');
+            await oneInch.approve(ONEINCH_DELEGATION_MANAGER, delegatedAmount, { from: user1 });
+            txReceipt = await oneInchDelegationManager.delegate(delegatee, delegatedAmount, { from: user1 });
 
             let events = await oneInchDelegationManager.getPastEvents('DelegateChanged', {
                 filter: {},  /// [Note]: If "index" is used for some event property, index number is specified
@@ -151,7 +161,14 @@ contract("StakeDelegation", function(accounts) {
                 "PowerAtBlock of user1 should be 1000"
             );
         });
+    });
 
+    describe("StakeDelegation", () => {
+        it("delegateStaking by the STAKE_DELEGATION_1 contract", async () => {
+            const stakeDelegation1 = await StakeDelegation.at(STAKE_DELEGATION_1, { from: user1 });
+            const stakeAmount = web3.utils.toWei('500', 'ether');  /// 500 1inch tokens 
+            const txReceipt = await stakeDelegation1.delegateStaking(stakeAmount, { from: user1 });
+        });
     });
 
 });

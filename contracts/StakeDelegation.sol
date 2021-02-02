@@ -21,9 +21,13 @@ contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents, Stak
     OneInch public oneInch;                 /// 1INCH Token
     GovernanceMothership public stOneInch;  /// st1INCH token
 
+    address ST_ONEINCH;
+
     constructor(OneInch _oneInch, GovernanceMothership _stOneInch) public {
         oneInch = _oneInch;
         stOneInch = _stOneInch;
+
+        ST_ONEINCH = address(stOneInch);
     }
 
     ///-------------------------------------------------------
@@ -31,6 +35,7 @@ contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents, Stak
     ///-------------------------------------------------------
     
     function delegateStaking(uint stakeAmount) public returns (bool) {
+        oneInch.approve(ST_ONEINCH, stakeAmount);
         stOneInch.stake(stakeAmount);
     }
     
