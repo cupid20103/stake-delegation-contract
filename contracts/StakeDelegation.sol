@@ -8,6 +8,7 @@ import { StakeDelegationEvents } from "./stake-delegation/commons/StakeDelegatio
 import { StakeDelegationConstants } from "./stake-delegation/commons/StakeDelegationConstants.sol";
 
 import { OneInch } from "./1inch/1inch-token/OneInch.sol";
+import { GovernanceMothership } from "./1inch/1inch-token-staked/st-1inch/GovernanceMothership.sol";
 
 
 /**
@@ -17,10 +18,12 @@ import { OneInch } from "./1inch/1inch-token/OneInch.sol";
 contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents, StakeDelegationConstants {
     using SafeMath for uint256;
 
-    OneInch public oneInch; /// 1inch Token
+    OneInch public oneInch;                 /// 1INCH Token
+    GovernanceMothership public stOneInch;  /// st1INCH token
 
-    constructor(OneInch _oneInch) public {
+    constructor(OneInch _oneInch, GovernanceMothership _stOneInch) public {
         oneInch = _oneInch;
+        stOneInch = _stOneInch;
     }
 
     ///-------------------------------------------------------
