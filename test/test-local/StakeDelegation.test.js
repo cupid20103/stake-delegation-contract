@@ -15,15 +15,22 @@ const OneInch = artifacts.require("OneInch");
 contract("StakeDelegation", function(accounts) {
     /// Acccounts
     let deployer = accounts[0];
+    let user1 = accounts[1];
+    let user2 = accounts[2];
+    let user3 = accounts[3];
 
     /// Global Tokenization contract instance
-    let stakeDelegation;
+    let stakeDelegation1;
+    let stakeDelegation2;
+    let StakeDelegation3;
     let stakeDelegationFactory;
     let oneInchDelegationManager;
     let oneInch;
 
     /// Global variable for each contract addresses
-    let STAKE_DELEGATION;
+    let STAKE_DELEGATION_1;
+    let STAKE_DELEGATION_2;
+    let STAKE_DELEGATION_3;
     let STAKE_DELEGATION_FACTORY;
     let ONEINCH_DELEGATION_MANAGER;
     let ONEINCH;
@@ -49,6 +56,58 @@ contract("StakeDelegation", function(accounts) {
         it("Deploy the OneInchDelegationManager contract instance", async () => {
             oneInchDelegationManager = await OneInchDelegationManager.new(ONEINCH,{ from: deployer });
             ONEINCH_DELEGATION_MANAGER = oneInchDelegationManager.address;
+        });
+    });
+
+    describe("Check initial status", () => {
+        it("TotalSupply of 1inch token should be 1,500,000,000", async () => {
+            _totalSupply = await oneInch.totalSupply({ from: deployer });
+            console.log("\n=== totalSupply of 1inch token ===", String(web3.utils.fromWei(_totalSupply, 'ether')));
+            assert.equal(
+                String(web3.utils.fromWei(_totalSupply, 'ether')),
+                "1500000000",
+                "TotalSupply of 1inch token should be 1,500,000,000",
+            );
+        });
+
+        it("1,000 1inch token should be minted to 3 users (wallet addresses)", async () => {
+            const owner = deployer;
+            const mintAmount = web3.utils.toWei('1000', 'ether');  /// 1000 1inch tokens
+            txReceipt1 = await oneInch.mint(user1, mintAmount, { from: owner });
+            txReceipt2 = await oneInch.mint(user2, mintAmount, { from: owner });
+            txReceipt3 = await oneInch.mint(user3, mintAmount, { from: owner });
+        });
+    });
+
+    describe("StakeDelegationFactory", () => {
+        it("a new StakeDelegation contract should be created", async () => {
+            txReceipt = await stakeDelegationFactory.createNewStakeDelegation({ from: user1 });
+
+            /// [Note]: Retrieve an event log via web3.js v1.0.0
+            let events = await stakeDelegationFactory.getPastEvents('StakeDelegationCreated', {
+                filter: {},  /// [Note]: If "index" is used for some event property, index number is specified
+                fromBlock: 0,
+                toBlock: 'latest'
+            });
+            console.log("\n=== Event log of StakeDelegationCreated ===", events[0].returnValues);  /// [Result]: Successful to retrieve event log
+
+            STAKE_DELEGATION_1 = events[0].returnValues.stakeDelegation;
+            console.log("\n=== STAKE_DELEGATION_1 ===", STAKE_DELEGATION_1);
+        });
+    });
+
+    describe("OneInchDelegationManager", () => {
+        it("should be delegated by the StakeDelegation contract address", async () => {
+            /// [Note]: One of the StakeDelegation contract address (created by the StakeDelegationFactory contract) is assigned as a parameter of delegate() method
+            const delegatee = STAKE_DELEGATION_1;
+            txReceipt = await oneInchDelegationManager.delegate(delegatee, { from: user1 });
+
+            let events = await oneInchDelegationManager.getPastEvents('DelegateChanged', {
+                filter: {},  /// [Note]: If "index" is used for some event property, index number is specified
+                fromBlock: 0,
+                toBlock: 'latest'
+            });
+            console.log("\n=== Event log of DelegateChanged ===", events[0].returnValues);  /// [Result]: Successful to retrieve event log
         });
     });
 
