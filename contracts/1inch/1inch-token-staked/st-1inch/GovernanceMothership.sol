@@ -21,7 +21,6 @@ contract GovernanceMothership is Ownable, BalanceAccounting {
     event AddModule(address indexed module);
     event RemoveModule(address indexed module);
 
-    //IERC20 public inchToken;
     IERC20 public immutable inchToken;
 
     EnumerableSet.AddressSet private _modules;
