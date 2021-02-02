@@ -119,16 +119,25 @@ contract("StakeDelegation", function(accounts) {
 
             /// Save block number
             firstActionBlockNumber = await time.latestBlock();  /// Get the latest block number
-            console.log("\n=== firstActionBlockNumber", String(firstActionBlockNumber));
+            console.log("\n=== firstActionBlockNumber ===", String(firstActionBlockNumber));
         });
 
-        it("getPowerAtBlock should be", async () => {
+        it("getPowerAtBlock of user1 should be 0", async () => {
             const user = user1;
             const blockNumber = Number(String(firstActionBlockNumber));
             const delegationType = 0;  /// [Note]: "0" indicates "STAKE" that is defined in the DelegationType enum
             powerAtBlock = await oneInchDelegationManager.getPowerAtBlock(user, blockNumber, delegationType, { from: user1 });
-            console.log("\n=== powerAtBlock", String(powerAtBlock));            
+            console.log("\n=== powerAtBlock of user1 ===", String(powerAtBlock));            
         });
+
+        it("getPowerAtBlock of STAKE_DELEGATION_1 should be ~~", async () => {
+            const user = STAKE_DELEGATION_1;
+            const blockNumber = Number(String(firstActionBlockNumber));
+            const delegationType = 0;  /// [Note]: "0" indicates "STAKE" that is defined in the DelegationType enum
+            powerAtBlock = await oneInchDelegationManager.getPowerAtBlock(user, blockNumber, delegationType, { from: user1 });
+            console.log("\n=== powerAtBlock of STAKE_DELEGATION_1 ===", String(powerAtBlock));            
+        });
+
     });
 
 });
