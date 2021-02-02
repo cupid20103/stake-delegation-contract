@@ -116,7 +116,8 @@ contract("StakeDelegation", function(accounts) {
         it("should be delegated by the StakeDelegation contract address", async () => {
             /// [Note]: One of the StakeDelegation contract address (created by the StakeDelegationFactory contract) is assigned as a parameter of delegate() method
             const delegatee = STAKE_DELEGATION_1;
-            txReceipt = await oneInchDelegationManager.delegate(delegatee, { from: user1 });
+            const delegatedAmount = web3.utils.toWei('500', 'ether');
+            txReceipt = await oneInchDelegationManager.delegate(delegatee, delegatedAmount, { from: user1 });
 
             let events = await oneInchDelegationManager.getPastEvents('DelegateChanged', {
                 filter: {},  /// [Note]: If "index" is used for some event property, index number is specified
