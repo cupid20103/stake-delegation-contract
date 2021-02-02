@@ -159,7 +159,14 @@ contract("StakeDelegation", function(accounts) {
                 "PowerAtBlock of user1 should be 1000"
             );
         });
+    });
 
+    describe("StakeDelegation", () => {
+        it("delegateStaking by the STAKE_DELEGATION_1 contract", async () => {
+            const stakeDelegation1 = await StakeDelegation.at(STAKE_DELEGATION_1, { from: user1 });
+            const stakeAmount = web3.utils.toWei('500', 'ether');  /// 500 1inch tokens 
+            const txReceipt = await stakeDelegation1.delegateStaking(stakeAmount, { from: user1 });
+        });
     });
 
 });
