@@ -185,9 +185,28 @@ contract("StakeDelegation", function(accounts) {
         });
 
         it("delegate FeeVote by the STAKE_DELEGATION_1 contract", async () => {
-            /// [Todo]: Next
             const vote = 10;
             const txReceipt = await stakeDelegation1.delegateFeeVote(vote, { from: user1 });
+        });
+
+        it("delegate SlippageFeeVote by the STAKE_DELEGATION_1 contract", async () => {
+            const vote = 10;
+            const txReceipt = await stakeDelegation1.delegateSlippageFeeVote(vote, { from: user1 });
+        });
+
+        it("delegate DecayPeriodVote by the STAKE_DELEGATION_1 contract", async () => {
+            const vote = 10;
+            const txReceipt = await stakeDelegation1.delegateDecayPeriodVote(vote, { from: user1 });
+        });
+
+        it("delegate ReferralShareVote by the STAKE_DELEGATION_1 contract", async () => {
+            const vote = 10;
+            const txReceipt = await stakeDelegation1.delegateReferralShareVote(vote, { from: user1 });
+        });
+
+        it("delegate GovernanceShareVote by the STAKE_DELEGATION_1 contract", async () => {
+            const vote = 10;
+            const txReceipt = await stakeDelegation1.delegateGovernanceShareVote(vote, { from: user1 });
         });
     });
 
