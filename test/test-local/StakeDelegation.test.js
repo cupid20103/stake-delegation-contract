@@ -11,6 +11,7 @@ const StakeDelegationFactory = artifacts.require("StakeDelegationFactory");
 const OneInchDelegationManager = artifacts.require("OneInchDelegationManager");
 const OneInch = artifacts.require("OneInch");
 const GovernanceMothership = artifacts.require("GovernanceMothership");
+const MooniswapFactoryGovernance = artifacts.require("MooniswapFactoryGovernance");
 
 
 /***
@@ -31,6 +32,7 @@ contract("StakeDelegation", function(accounts) {
     let oneInchDelegationManager;
     let oneInch;
     let stOneInch;
+    let mooniswapFactoryGovernance;
 
     /// Global variable for each contract addresses
     let STAKE_DELEGATION_1;
@@ -40,6 +42,7 @@ contract("StakeDelegation", function(accounts) {
     let ONEINCH_DELEGATION_MANAGER;
     let ONEINCH;
     let ST_ONEINCH;
+    let MOONISWAP_FACTORY_GOVERNANCE;
 
     /// Global variable for saving block number
     let firstActionBlockNumber = 0;
@@ -64,8 +67,14 @@ contract("StakeDelegation", function(accounts) {
             ST_ONEINCH = stOneInch.address;
         });
 
+        it("Deploy the MooniswapFactoryGovernance contract instance", async () => {
+            const mothership = deployer;
+            mooniswapFactoryGovernance = await MooniswapFactoryGovernance.new(mothership, { from: deployer });
+            MOONISWAP_FACTORY_GOVERNANCE = mooniswapFactoryGovernance.address;
+        });
+
         it("Deploy the StakeDelegationFactory contract instance", async () => {
-            stakeDelegationFactory = await StakeDelegationFactory.new(ONEINCH, ST_ONEINCH, { from: deployer });
+            stakeDelegationFactory = await StakeDelegationFactory.new(ONEINCH, ST_ONEINCH,  MOONISWAP_FACTORY_GOVERNANCE, { from: deployer });
             STAKE_DELEGATION_FACTORY = stakeDelegationFactory.address;
         });
 
