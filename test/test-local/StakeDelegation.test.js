@@ -184,10 +184,10 @@ contract("StakeDelegation", function(accounts) {
             const txReceipt = await stakeDelegation1.delegateStaking(stakeAmount, { from: user1 });
         });
 
-        it("delegateVoting by the STAKE_DELEGATION_1 contract", async () => {
+        it("delegate FeeVote by the STAKE_DELEGATION_1 contract", async () => {
             /// [Todo]: Next
             const vote = 10;
-            const txReceipt = await stakeDelegation1.delegateVoting(vote, { from: user1 });
+            const txReceipt = await stakeDelegation1.delegateFeeVote(vote, { from: user1 });
         });
     });
 

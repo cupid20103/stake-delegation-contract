@@ -34,18 +34,41 @@ contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents, Stak
     }
 
     ///-------------------------------------------------------
-    /// Main methods of the 1inch delegation token
+    /// Delegate staking
     ///-------------------------------------------------------
-    
     function delegateStaking(uint stakeAmount) public returns (bool) {
         oneInch.approve(ST_ONEINCH, stakeAmount);
         stOneInch.stake(stakeAmount);
     }
-    
-    function delegateVoting(uint vote) public returns (bool) {
+
+
+    ///-------------------------------------------------------
+    /// Delegate voting
+    ///-------------------------------------------------------    
+    function delegateFeeVote(uint vote) public returns (bool) {
         mooniswapFactoryGovernance.defaultFeeVote(vote);
     }
-    
+
+    function delegateSlippageFeeVote(uint vote) public returns (bool) {
+        mooniswapFactoryGovernance.defaultSlippageFeeVote(vote);
+    }
+
+    function delegateDecayPeriodVote(uint vote) public returns (bool) {
+        mooniswapFactoryGovernance.defaultDecayPeriodVote(vote);
+    }
+
+    function delegateReferralShareVote(uint vote) public returns (bool) {
+        mooniswapFactoryGovernance.referralShareVote(vote);
+    }
+
+    function delegateGovernanceShareVote(uint vote) public returns (bool) {
+        mooniswapFactoryGovernance.governanceShareVote(vote);
+    }
+
+
+    ///-------------------------------------------------------
+    /// Delegate reward distribution
+    ///-------------------------------------------------------
     function delegateRewardDistribution() public returns (bool) {}
 
 }
