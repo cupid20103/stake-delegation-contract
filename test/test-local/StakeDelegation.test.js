@@ -181,6 +181,9 @@ contract("StakeDelegation", function(accounts) {
 
         it("delegateVoting by the STAKE_DELEGATION_1 contract", async () => {
             /// [Todo]: Next
+            const vote = 10;
+            //const vote = web3.utils.toWei('10', 'ether');
+            const txReceipt = await mooniswapFactoryGovernance.defaultFeeVote(vote);
         });
     });
 
