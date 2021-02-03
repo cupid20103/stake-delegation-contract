@@ -42,7 +42,9 @@ contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents, Stak
         stOneInch.stake(stakeAmount);
     }
     
-    function delegateVoting() public returns (bool) {}
+    function delegateVoting(uint vote) public returns (bool) {
+        mooniswapFactoryGovernance.defaultFeeVote(vote);
+    }
     
     function delegateRewardDistribution() public returns (bool) {}
 

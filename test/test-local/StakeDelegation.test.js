@@ -173,8 +173,13 @@ contract("StakeDelegation", function(accounts) {
     });
 
     describe("StakeDelegation", () => {
+        let stakeDelegation1;
+
+        it("Setup the STAKE_DELEGATION_1 contract", async () => {
+            stakeDelegation1 = await StakeDelegation.at(STAKE_DELEGATION_1, { from: user1 });
+        });
+
         it("delegateStaking by the STAKE_DELEGATION_1 contract", async () => {
-            const stakeDelegation1 = await StakeDelegation.at(STAKE_DELEGATION_1, { from: user1 });
             const stakeAmount = web3.utils.toWei('500', 'ether');  /// 500 1inch tokens 
             const txReceipt = await stakeDelegation1.delegateStaking(stakeAmount, { from: user1 });
         });
@@ -182,8 +187,7 @@ contract("StakeDelegation", function(accounts) {
         it("delegateVoting by the STAKE_DELEGATION_1 contract", async () => {
             /// [Todo]: Next
             const vote = 10;
-            //const vote = web3.utils.toWei('10', 'ether');
-            const txReceipt = await mooniswapFactoryGovernance.defaultFeeVote(vote);
+            const txReceipt = await stakeDelegation1.delegateVoting(vote, { from: user1 });
         });
     });
 
