@@ -169,6 +169,10 @@ contract("StakeDelegation", function(accounts) {
             const stakeAmount = web3.utils.toWei('500', 'ether');  /// 500 1inch tokens 
             const txReceipt = await stakeDelegation1.delegateStaking(stakeAmount, { from: user1 });
         });
+
+        it("delegateVoting by the STAKE_DELEGATION_1 contract", async () => {
+            /// [Todo]: Next
+        });
     });
 
 });
