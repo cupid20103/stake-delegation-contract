@@ -195,12 +195,12 @@ contract("StakeDelegation", function(accounts) {
         });
 
         it("delegate DecayPeriodVote by the STAKE_DELEGATION_1 contract", async () => {
-            const vote = 10;
+            const vote = 120; /// This is 2 minuites (120 second) <= [Note]: Min:1 minutes - Max:5 minuites (Min:60 sec - Max:300 sec)
             const txReceipt = await stakeDelegation1.delegateDecayPeriodVote(vote, { from: user1 });
         });
 
         it("delegate ReferralShareVote by the STAKE_DELEGATION_1 contract", async () => {
-            const vote = 10;
+            const vote = `${ 0.08 * 1e18 }` ;  /// This is 8% <= [Note]: Min:5% - Max 10%
             const txReceipt = await stakeDelegation1.delegateReferralShareVote(vote, { from: user1 });
         });
 
