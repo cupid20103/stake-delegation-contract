@@ -74,9 +74,13 @@ $ ganache-cli -d
     - 1inch token staked (st1INCH):  
       - GovernanceMothership.sol  
       - IGovernanceMothership.sol  
-      - BalanceAccounting.sol  
+      - BalanceAccounting.sol   
         https://etherscan.io/address/0xa0446d8804611944f1b527ecd37d7dcbe442caba#code
 
     - 1inch governance (Voting, etc...):
-      - MooniswapFactoryGovernance.sol  
+      - MooniswapFactoryGovernance.sol   
         https://etherscan.io/address/0xbAF9A5d4b0052359326A6CDAb54BABAa3a3A9643#code
+
+    - 1inch governance reward  
+      - GovernanceRewards.sol  
+        https://etherscan.io/address/0x0f85a912448279111694f4ba4f85dc641c54b594#code

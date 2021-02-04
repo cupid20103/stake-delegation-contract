@@ -179,7 +179,7 @@ contract("StakeDelegation", function(accounts) {
             stakeDelegation1 = await StakeDelegation.at(STAKE_DELEGATION_1, { from: user1 });
         });
 
-        it("delegateStaking by the STAKE_DELEGATION_1 contract", async () => {
+        it("delegate Staking by the STAKE_DELEGATION_1 contract", async () => {
             const stakeAmount = web3.utils.toWei('500', 'ether');  /// 500 1inch tokens 
             const txReceipt = await stakeDelegation1.delegateStaking(stakeAmount, { from: user1 });
         });
@@ -209,7 +209,7 @@ contract("StakeDelegation", function(accounts) {
             const txReceipt = await stakeDelegation1.delegateGovernanceShareVote(vote, { from: user1 });
         });
 
-        it("delegateRewardDistribution with un-Stake by the STAKE_DELEGATION_1 contract", async () => {
+        it("delegate RewardDistribution with un-Stake by the STAKE_DELEGATION_1 contract", async () => {
             const unStakeAmount = web3.utils.toWei('500', 'ether');  /// 500 1inch tokens 
             const txReceipt = await stakeDelegation1.delegateRewardDistributionWithUnStake(unStakeAmount, { from: user1 });            
         });
