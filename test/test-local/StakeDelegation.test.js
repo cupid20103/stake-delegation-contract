@@ -12,6 +12,7 @@ const OneInchDelegationManager = artifacts.require("OneInchDelegationManager");
 const OneInch = artifacts.require("OneInch");
 const GovernanceMothership = artifacts.require("GovernanceMothership");
 const MooniswapFactoryGovernance = artifacts.require("MooniswapFactoryGovernance");
+const GovernanceRewards = artifacts.require("GovernanceRewards");
 
 
 /***
@@ -33,6 +34,7 @@ contract("StakeDelegation", function(accounts) {
     let oneInch;
     let stOneInch;
     let mooniswapFactoryGovernance;
+    let governanceRewards;
 
     /// Global variable for each contract addresses
     let STAKE_DELEGATION_1;
@@ -43,6 +45,7 @@ contract("StakeDelegation", function(accounts) {
     let ONEINCH;
     let ST_ONEINCH;
     let MOONISWAP_FACTORY_GOVERNANCE;
+    let GOVERNANCE_REWARDS;
 
     /// Global variable for saving block number
     let firstActionBlockNumber = 0;
@@ -73,8 +76,14 @@ contract("StakeDelegation", function(accounts) {
             MOONISWAP_FACTORY_GOVERNANCE = mooniswapFactoryGovernance.address;
         });
 
+        it("Deploy the GovernanceRewards contract instance", async () => {
+            const mothership = ST_ONEINCH;  /// [Note]: stOneInch instance is the GovernanceMothership.sol
+            governanceRewards = await GovernanceRewards.new(ONEINCH, mothership, { from: deployer });
+            GOVERNANCE_REWARDS = governanceRewards.address;
+        });
+
         it("Deploy the StakeDelegationFactory contract instance", async () => {
-            stakeDelegationFactory = await StakeDelegationFactory.new(ONEINCH, ST_ONEINCH,  MOONISWAP_FACTORY_GOVERNANCE, { from: deployer });
+            stakeDelegationFactory = await StakeDelegationFactory.new(ONEINCH, ST_ONEINCH,  MOONISWAP_FACTORY_GOVERNANCE, GOVERNANCE_REWARDS, { from: deployer });
             STAKE_DELEGATION_FACTORY = stakeDelegationFactory.address;
         });
 
@@ -207,6 +216,10 @@ contract("StakeDelegation", function(accounts) {
         it("delegate GovernanceShareVote by the STAKE_DELEGATION_1 contract", async () => {
             const vote = 10;
             const txReceipt = await stakeDelegation1.delegateGovernanceShareVote(vote, { from: user1 });
+        });
+
+        it("delegate RewardDistribution with claim by the STAKE_DELEGATION_1 contract", async () => {
+            const txReceipt = await stakeDelegation1.delegateRewardDistributionWithClaim({ from: user1 });            
         });
 
         it("delegate RewardDistribution with un-Stake by the STAKE_DELEGATION_1 contract", async () => {
