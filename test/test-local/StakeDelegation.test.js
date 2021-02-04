@@ -68,6 +68,7 @@ contract("StakeDelegation", function(accounts) {
         });
 
         it("Deploy the MooniswapFactoryGovernance contract instance", async () => {
+            const mothership = ST_ONEINCH;  /// [Note]: stOneInch instance is the GovernanceMothership.sol
             mooniswapFactoryGovernance = await MooniswapFactoryGovernance.new(mothership, { from: deployer });
             MOONISWAP_FACTORY_GOVERNANCE = mooniswapFactoryGovernance.address;
         });
