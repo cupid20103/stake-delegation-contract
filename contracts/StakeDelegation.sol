@@ -10,6 +10,7 @@ import { StakeDelegationConstants } from "./stake-delegation/commons/StakeDelega
 import { OneInch } from "./1inch/1inch-token/OneInch.sol";
 import { GovernanceMothership } from "./1inch/1inch-token-staked/st-1inch/GovernanceMothership.sol";
 import { MooniswapFactoryGovernance } from "./1inch/1inch-governance/governance/MooniswapFactoryGovernance.sol";
+import { GovernanceRewards } from "./1inch/1inch-governance/governance/GovernanceRewards.sol";
 
 
 /**
@@ -22,13 +23,15 @@ contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents, Stak
     OneInch public oneInch;                 /// 1INCH Token
     GovernanceMothership public stOneInch;  /// st1INCH token
     MooniswapFactoryGovernance public mooniswapFactoryGovernance;  /// For voting
+    GovernanceRewards public governanceRewards;                    /// For claiming rewards
 
     address ST_ONEINCH;
 
-    constructor(OneInch _oneInch, GovernanceMothership _stOneInch, MooniswapFactoryGovernance _mooniswapFactoryGovernance) public {
+    constructor(OneInch _oneInch, GovernanceMothership _stOneInch, MooniswapFactoryGovernance _mooniswapFactoryGovernance, GovernanceRewards _governanceRewards) public {
         oneInch = _oneInch;
         stOneInch = _stOneInch;
         mooniswapFactoryGovernance = _mooniswapFactoryGovernance;
+        governanceRewards = _governanceRewards;
 
         ST_ONEINCH = address(stOneInch);
     }
@@ -71,7 +74,16 @@ contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents, Stak
     ///-----------------------------------------------------------------
 
     /**
-     * @notice - Delegate reward distribution with Un-Stake (full amount)
+     * @notice - Delegate reward distribution with claim (fill amount)
+     */
+    function delegateRewardDistributionWithClaim() public returns (bool) {
+        uint rewardAmount = governanceRewards.earned(address(this)); 
+        governanceRewards.getReward();
+        oneInch.transfer(msg.sender, rewardAmount);
+    }
+
+    /**
+     * @notice - Delegate reward distribution with Un-Stake (specified-amount)
      */
     function delegateRewardDistributionWithUnStake(uint unStakeAmount) public returns (bool) {
         stOneInch.unstake(unStakeAmount);
