@@ -210,7 +210,8 @@ contract("StakeDelegation", function(accounts) {
         });
 
         it("delegateRewardDistribution with un-Stake by the STAKE_DELEGATION_1 contract", async () => {
-            /// [Todo]:
+            const unStakeAmount = web3.utils.toWei('500', 'ether');  /// 500 1inch tokens 
+            const txReceipt = await stakeDelegation1.delegateRewardDistributionWithUnStake(unStakeAmount, { from: user1 });            
         });
     });
 
