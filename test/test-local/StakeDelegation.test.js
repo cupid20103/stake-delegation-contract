@@ -11,6 +11,7 @@ const StakeDelegationFactory = artifacts.require("StakeDelegationFactory");
 const OneInchDelegationManager = artifacts.require("OneInchDelegationManager");
 const OneInch = artifacts.require("OneInch");
 const GovernanceMothership = artifacts.require("GovernanceMothership");
+const MooniswapFactoryGovernance = artifacts.require("MooniswapFactoryGovernance");
 
 
 /***
@@ -31,6 +32,7 @@ contract("StakeDelegation", function(accounts) {
     let oneInchDelegationManager;
     let oneInch;
     let stOneInch;
+    let mooniswapFactoryGovernance;
 
     /// Global variable for each contract addresses
     let STAKE_DELEGATION_1;
@@ -40,6 +42,7 @@ contract("StakeDelegation", function(accounts) {
     let ONEINCH_DELEGATION_MANAGER;
     let ONEINCH;
     let ST_ONEINCH;
+    let MOONISWAP_FACTORY_GOVERNANCE;
 
     /// Global variable for saving block number
     let firstActionBlockNumber = 0;
@@ -64,8 +67,14 @@ contract("StakeDelegation", function(accounts) {
             ST_ONEINCH = stOneInch.address;
         });
 
+        it("Deploy the MooniswapFactoryGovernance contract instance", async () => {
+            const mothership = deployer;
+            mooniswapFactoryGovernance = await MooniswapFactoryGovernance.new(mothership, { from: deployer });
+            MOONISWAP_FACTORY_GOVERNANCE = mooniswapFactoryGovernance.address;
+        });
+
         it("Deploy the StakeDelegationFactory contract instance", async () => {
-            stakeDelegationFactory = await StakeDelegationFactory.new(ONEINCH, ST_ONEINCH, { from: deployer });
+            stakeDelegationFactory = await StakeDelegationFactory.new(ONEINCH, ST_ONEINCH,  MOONISWAP_FACTORY_GOVERNANCE, { from: deployer });
             STAKE_DELEGATION_FACTORY = stakeDelegationFactory.address;
         });
 
@@ -164,14 +173,40 @@ contract("StakeDelegation", function(accounts) {
     });
 
     describe("StakeDelegation", () => {
+        let stakeDelegation1;
+
+        it("Setup the STAKE_DELEGATION_1 contract", async () => {
+            stakeDelegation1 = await StakeDelegation.at(STAKE_DELEGATION_1, { from: user1 });
+        });
+
         it("delegateStaking by the STAKE_DELEGATION_1 contract", async () => {
-            const stakeDelegation1 = await StakeDelegation.at(STAKE_DELEGATION_1, { from: user1 });
             const stakeAmount = web3.utils.toWei('500', 'ether');  /// 500 1inch tokens 
             const txReceipt = await stakeDelegation1.delegateStaking(stakeAmount, { from: user1 });
         });
 
-        it("delegateVoting by the STAKE_DELEGATION_1 contract", async () => {
-            /// [Todo]: Next
+        it("delegate FeeVote by the STAKE_DELEGATION_1 contract", async () => {
+            const vote = 10;
+            const txReceipt = await stakeDelegation1.delegateFeeVote(vote, { from: user1 });
+        });
+
+        it("delegate SlippageFeeVote by the STAKE_DELEGATION_1 contract", async () => {
+            const vote = 10;
+            const txReceipt = await stakeDelegation1.delegateSlippageFeeVote(vote, { from: user1 });
+        });
+
+        it("delegate DecayPeriodVote by the STAKE_DELEGATION_1 contract", async () => {
+            const vote = 120; /// This is 2 minuites (120 second) <= [Note]: Min:1 minutes - Max:5 minuites (Min:60 sec - Max:300 sec)
+            const txReceipt = await stakeDelegation1.delegateDecayPeriodVote(vote, { from: user1 });
+        });
+
+        it("delegate ReferralShareVote by the STAKE_DELEGATION_1 contract", async () => {
+            const vote = `${ 0.08 * 1e18 }` ;  /// This is 8% <= [Note]: Min:5% - Max 10%
+            const txReceipt = await stakeDelegation1.delegateReferralShareVote(vote, { from: user1 });
+        });
+
+        it("delegate GovernanceShareVote by the STAKE_DELEGATION_1 contract", async () => {
+            const vote = 10;
+            const txReceipt = await stakeDelegation1.delegateGovernanceShareVote(vote, { from: user1 });
         });
     });
 

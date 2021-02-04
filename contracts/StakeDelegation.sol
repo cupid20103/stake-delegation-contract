@@ -9,6 +9,7 @@ import { StakeDelegationConstants } from "./stake-delegation/commons/StakeDelega
 
 import { OneInch } from "./1inch/1inch-token/OneInch.sol";
 import { GovernanceMothership } from "./1inch/1inch-token-staked/st-1inch/GovernanceMothership.sol";
+import { MooniswapFactoryGovernance } from "./1inch/1inch-governance/governance/MooniswapFactoryGovernance.sol";
 
 
 /**
@@ -20,27 +21,54 @@ contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents, Stak
 
     OneInch public oneInch;                 /// 1INCH Token
     GovernanceMothership public stOneInch;  /// st1INCH token
+    MooniswapFactoryGovernance public mooniswapFactoryGovernance;  /// For voting
 
     address ST_ONEINCH;
 
-    constructor(OneInch _oneInch, GovernanceMothership _stOneInch) public {
+    constructor(OneInch _oneInch, GovernanceMothership _stOneInch, MooniswapFactoryGovernance _mooniswapFactoryGovernance) public {
         oneInch = _oneInch;
         stOneInch = _stOneInch;
+        mooniswapFactoryGovernance = _mooniswapFactoryGovernance;
 
         ST_ONEINCH = address(stOneInch);
     }
 
     ///-------------------------------------------------------
-    /// Main methods of the 1inch delegation token
+    /// Delegate staking
     ///-------------------------------------------------------
-    
     function delegateStaking(uint stakeAmount) public returns (bool) {
         oneInch.approve(ST_ONEINCH, stakeAmount);
         stOneInch.stake(stakeAmount);
     }
-    
-    function delegateVoting() public returns (bool) {}
-    
+
+
+    ///-------------------------------------------------------
+    /// Delegate voting
+    ///-------------------------------------------------------    
+    function delegateFeeVote(uint vote) public returns (bool) {
+        mooniswapFactoryGovernance.defaultFeeVote(vote);
+    }
+
+    function delegateSlippageFeeVote(uint vote) public returns (bool) {
+        mooniswapFactoryGovernance.defaultSlippageFeeVote(vote);
+    }
+
+    function delegateDecayPeriodVote(uint vote) public returns (bool) {
+        mooniswapFactoryGovernance.defaultDecayPeriodVote(vote);
+    }
+
+    function delegateReferralShareVote(uint vote) public returns (bool) {
+        mooniswapFactoryGovernance.referralShareVote(vote);
+    }
+
+    function delegateGovernanceShareVote(uint vote) public returns (bool) {
+        mooniswapFactoryGovernance.governanceShareVote(vote);
+    }
+
+
+    ///-------------------------------------------------------
+    /// Delegate reward distribution
+    ///-------------------------------------------------------
     function delegateRewardDistribution() public returns (bool) {}
 
 }
