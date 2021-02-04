@@ -68,7 +68,6 @@ contract("StakeDelegation", function(accounts) {
         });
 
         it("Deploy the MooniswapFactoryGovernance contract instance", async () => {
-            const mothership = deployer;
             mooniswapFactoryGovernance = await MooniswapFactoryGovernance.new(mothership, { from: deployer });
             MOONISWAP_FACTORY_GOVERNANCE = mooniswapFactoryGovernance.address;
         });
@@ -200,13 +199,17 @@ contract("StakeDelegation", function(accounts) {
         });
 
         it("delegate ReferralShareVote by the STAKE_DELEGATION_1 contract", async () => {
-            const vote = `${ 0.08 * 1e18 }` ;  /// This is 8% <= [Note]: Min:5% - Max 10%
+            const vote = `${ 0.08 * 1e18 }` ;  /// This is 8% <= [Note]: Min:5% - Max:10%
             const txReceipt = await stakeDelegation1.delegateReferralShareVote(vote, { from: user1 });
         });
 
         it("delegate GovernanceShareVote by the STAKE_DELEGATION_1 contract", async () => {
             const vote = 10;
             const txReceipt = await stakeDelegation1.delegateGovernanceShareVote(vote, { from: user1 });
+        });
+
+        it("delegateRewardDistribution with un-Stake by the STAKE_DELEGATION_1 contract", async () => {
+            /// [Todo]:
         });
     });
 
