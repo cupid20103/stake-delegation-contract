@@ -66,9 +66,16 @@ contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents, Stak
     }
 
 
-    ///-------------------------------------------------------
-    /// Delegate reward distribution
-    ///-------------------------------------------------------
-    function delegateRewardDistribution() public returns (bool) {}
+    ///-----------------------------------------------------------------
+    /// Delegate reward distribution (Claim or UnStake)
+    ///-----------------------------------------------------------------
+
+    /**
+     * @notice - Delegate reward distribution with Un-Stake (full amount)
+     */
+    function delegateRewardDistributionWithUnStake(uint unStakeAmount) public returns (bool) {
+        stOneInch.unstake(unStakeAmount);
+        oneInch.transfer(msg.sender, unStakeAmount);
+    }
 
 }
