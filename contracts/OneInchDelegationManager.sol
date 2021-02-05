@@ -36,7 +36,7 @@ contract OneInchDelegationManager is OneInchDelegationManagerStorages, OneInchDe
 
         /// Register delegator address into the delegatee (the StakeDelegation contract)
         StakeDelegation stakeDelegation = StakeDelegation(delegatee);
-        stakeDelegation.registerDelegator(msg.sender);
+        stakeDelegation.registerDelegator(msg.sender, delegatedAmount, block.number);
 
         /// Delegate
         _delegateByType(msg.sender, delegatee, DelegationType.STAKE);

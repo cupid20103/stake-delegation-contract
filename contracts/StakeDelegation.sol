@@ -40,11 +40,18 @@ contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents, Stak
 
 
     ///-------------------------------------------------------
-    /// Registor a delegator address
+    /// Registor a delegator address and information
     ///-------------------------------------------------------
-    function registerDelegator(address delegator) public returns (bool) {
+    function registerDelegator(address delegator, uint delegatedAmount, uint blockNumber) public returns (bool) {
         delegators.push(delegator);
-    }    
+        _saveDelegatorInfo(delegator, delegatedAmount, blockNumber);
+    }
+
+    function _saveDelegatorInfo(address delegator, uint delegatedAmount, uint blockNumber) internal returns(bool) {
+        DelegatorInfo storage delegatorInfo = delegatorInfos[delegator];
+        delegatorInfo.delegatedAmount;
+        delegatorInfo.blockNumber;
+    }
 
 
     ///-------------------------------------------------------
@@ -104,6 +111,9 @@ contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents, Stak
     ///------------------------------------------------------------
     /// Getter methods
     ///------------------------------------------------------------
+    /**
+     * @notice - Get all delegators addresses of this StakeDelegation contract
+     */
     function getDelegatedAddresses() public view returns (address[] memory _delegators) {
         return delegators;
     }
