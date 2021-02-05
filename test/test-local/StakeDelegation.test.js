@@ -131,7 +131,7 @@ contract("StakeDelegation", function(accounts) {
     });
 
     describe("OneInchDelegationManager", () => {
-        it("should be delegated by the StakeDelegation contract address", async () => {
+        it("user1 address should be delegated by the STAKE_DELEGATION_1 contract address", async () => {
             /// [Note]: One of the StakeDelegation contract address (created by the StakeDelegationFactory contract) is assigned as a parameter of delegate() method
             const delegatee = STAKE_DELEGATION_1;
             const delegatedAmount = web3.utils.toWei('500', 'ether');
@@ -225,6 +225,17 @@ contract("StakeDelegation", function(accounts) {
         it("delegate RewardDistribution with un-Stake by the STAKE_DELEGATION_1 contract", async () => {
             const unStakeAmount = web3.utils.toWei('500', 'ether');  /// 500 1inch tokens 
             const txReceipt = await stakeDelegation1.delegateRewardDistributionWithUnStake(unStakeAmount, { from: user1 });            
+        });
+
+        it("1inch token balance of user1 should be more than 1000 1INCH", async () => {
+            const oneInchTokenBalance = await oneInch.balanceOf(user1, { from: user1 });
+            console.log("\n=== oneInchTokenBalance of user1 ===", String(web3.utils.fromWei(oneInchTokenBalance)));
+
+            assert.equal(
+                String(web3.utils.fromWei(oneInchTokenBalance)),
+                "1000",
+                "1inch token balance of user1 should be more than 1000 1INCH"
+            );
         });
     });
 
