@@ -97,6 +97,8 @@ contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents, Stak
         uint rewardAmount = governanceRewards.earned(address(this)); 
         governanceRewards.getReward();
         oneInch.transfer(msg.sender, rewardAmount);
+
+        /// [Todo]: Distribute rewards into each users depends on "share" of delegated amount
     }
 
     /**
@@ -105,6 +107,8 @@ contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents, Stak
     function delegateRewardDistributionWithUnStake(uint unStakeAmount) public returns (bool) {
         stOneInch.unstake(unStakeAmount);
         oneInch.transfer(msg.sender, unStakeAmount);
+
+        /// [Todo]: Distribute rewards into each users depends on "share" of delegated amount
     }
 
 
