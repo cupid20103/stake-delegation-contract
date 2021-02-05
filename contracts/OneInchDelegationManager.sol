@@ -6,7 +6,7 @@ import { SafeMath } from '@openzeppelin/contracts/math/SafeMath.sol';
 import { OneInchDelegationManagerStorages } from "./oneInch-delegation-manager/commons/OneInchDelegationManagerStorages.sol";
 import { OneInchDelegationManagerEvents } from "./oneInch-delegation-manager/commons/OneInchDelegationManagerEvents.sol";
 import { OneInchDelegationManagerConstants } from "./oneInch-delegation-manager/commons/OneInchDelegationManagerConstants.sol";
-
+import { StakeDelegation } from "./StakeDelegation.sol";
 import { OneInch } from "./1inch/1inch-token/OneInch.sol";
 
 
@@ -25,6 +25,7 @@ contract OneInchDelegationManager is OneInchDelegationManagerStorages, OneInchDe
 
     /**
      * @notice - Delegates all the powers to a specific user (address of delegatee)
+     * @notice - Delegator must be msg.sender
      * @param delegatee - The user to which the power will be delegated
      * @param delegatedAmount - 1INCH tokens amount delegated by a user (caller)  
      */ 
@@ -32,6 +33,10 @@ contract OneInchDelegationManager is OneInchDelegationManagerStorages, OneInchDe
         /// Transfer 1INCH tokens into a delegatee address
         oneInch.transferFrom(msg.sender, address(this), delegatedAmount);
         oneInch.transfer(delegatee, delegatedAmount);
+
+        /// Register delegator address into the delegatee (the StakeDelegation contract)
+        StakeDelegation stakeDelegation = StakeDelegation(delegatee);
+        stakeDelegation.registerDelegator(msg.sender);
 
         /// Delegate
         _delegateByType(msg.sender, delegatee, DelegationType.STAKE);

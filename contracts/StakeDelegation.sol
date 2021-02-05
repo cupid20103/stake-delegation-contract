@@ -20,6 +20,8 @@ import { GovernanceRewards } from "./1inch/1inch-governance/governance/Governanc
 contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents, StakeDelegationConstants {
     using SafeMath for uint256;
 
+    address[] delegators;  /// All delegators addresses
+
     OneInch public oneInch;                 /// 1INCH Token
     GovernanceMothership public stOneInch;  /// st1INCH token
     MooniswapFactoryGovernance public mooniswapFactoryGovernance;  /// For voting
@@ -35,6 +37,15 @@ contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents, Stak
 
         ST_ONEINCH = address(stOneInch);
     }
+
+
+    ///-------------------------------------------------------
+    /// Registor a delegator address
+    ///-------------------------------------------------------
+    function registerDelegator(address delegator) public returns (bool) {
+        delegators.push(delegator);
+    }    
+
 
     ///-------------------------------------------------------
     /// Delegate staking
@@ -72,7 +83,6 @@ contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents, Stak
     ///-----------------------------------------------------------------
     /// Delegate reward distribution (Claim or UnStake)
     ///-----------------------------------------------------------------
-
     /**
      * @notice - Delegate reward distribution with claim (fill amount)
      */
@@ -90,4 +100,13 @@ contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents, Stak
         oneInch.transfer(msg.sender, unStakeAmount);
     }
 
+
+    ///------------------------------------------------------------
+    /// Getter methods
+    ///------------------------------------------------------------
+    function getDelegatedAddresses() public view returns (address[] memory _delegators) {
+        return delegators;
+    }
+    
 }
+
