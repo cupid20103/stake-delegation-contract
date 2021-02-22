@@ -111,7 +111,7 @@ contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents, Stak
     function delegateRewardDistributionWithUnStake(uint unStakeAmount) public returns (bool) {
         stOneInch.unstake(unStakeAmount);
 
-        /// [Todo]: Distribute rewards into each users depends on "share" of delegated amount
+        /// [Todo]: Distribute rewards into each users based on "share" of delegated amount
         uint shareOfPool;  /// [Todo]: Compute share of pool of each delegator
         for (uint8 i=0; i < delegators.length; i++) {
             oneInch.transfer(delegators[i], unStakeAmount.div(delegators.length));
