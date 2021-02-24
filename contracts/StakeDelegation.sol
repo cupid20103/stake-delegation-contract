@@ -97,10 +97,14 @@ contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents, Stak
         uint rewardAmount = governanceRewards.earned(address(this)); 
         governanceRewards.getReward();
 
-        /// [Todo]: Distribute rewards into each users depends on "share" of delegated amount
-        uint shareOfDelegatedAmount;  /// [Todo]: Compute share of delegated-amount of each delegator
+        uint oneInchBalanceOfStakeDelegationContract = oneInch.balanceOf(address(this));
+
         for (uint8 i=0; i < delegators.length; i++) {
-            oneInch.transfer(delegators[i], rewardAmount.div(delegators.length));
+            uint delegatedAmount;   /// [Todo]: Identify each delegator's delegated-amount
+            uint shareOfDelegatedAmount = delegatedAmount.div(oneInchBalanceOfStakeDelegationContract).mul(100);  /// [Note]: Compute share of delegated-amount of each delegator. Unit is (%) = e.g. 52%
+            uint distributedRewardAmount = rewardAmount.mul(shareOfDelegatedAmount).div(100);
+
+            oneInch.transfer(delegators[i], distributedRewardAmount);
         }
         //oneInch.transfer(msg.sender, rewardAmount);
     }
