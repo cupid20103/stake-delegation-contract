@@ -95,6 +95,7 @@ contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents, Stak
     ///-----------------------------------------------------------------
     /// Delegate reward distribution (Claim or UnStake)
     ///-----------------------------------------------------------------
+    
     /**
      * @notice - Delegate reward distribution with claim (fill amount)
      */
@@ -104,6 +105,7 @@ contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents, Stak
 
         uint oneInchBalanceOfStakeDelegationContract = oneInch.balanceOf(address(this));
 
+        /// Distribute rewards into each users based on "share" of delegated-amount
         for (uint8 i=0; i < delegators.length; i++) {
             address delegatee = address(this);
             address delegator = delegators[i];
@@ -120,14 +122,25 @@ contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents, Stak
      * @notice - Delegate reward distribution with Un-Stake (specified-amount)
      */
     function delegateRewardDistributionWithUnStake(uint unStakeAmount) public returns (bool) {
+        /// Un-stake
         stOneInch.unstake(unStakeAmount);
 
-        /// [Todo]: Distribute rewards into each users based on "share" of delegated-amount
-        uint shareOfDelegatedAmount;  /// [Todo]: Compute share of delegated-amount of each delegator
+        /// Calculate rewards amount
+        uint rewardAmount = governanceRewards.earned(address(this)); 
+        governanceRewards.getReward();
+
+        uint oneInchBalanceOfStakeDelegationContract = oneInch.balanceOf(address(this));
+
+        /// Distribute rewards into each users based on "share" of delegated-amount
         for (uint8 i=0; i < delegators.length; i++) {
-            oneInch.transfer(delegators[i], unStakeAmount.div(delegators.length));
+            address delegatee = address(this);
+            address delegator = delegators[i];
+            uint delegatedAmount = oneInchDelegationManager.getDelegatedAmount(delegatee, delegator);   /// [Todo]: Identify each delegator's delegated-amount
+            uint shareOfDelegatedAmount = delegatedAmount.div(oneInchBalanceOfStakeDelegationContract).mul(100);  /// [Note]: Compute share of delegated-amount of each delegator. Unit is percentage (%)
+            uint distributedRewardAmount = rewardAmount.mul(shareOfDelegatedAmount).div(100);
+
+            oneInch.transfer(delegators[i], distributedRewardAmount);
         }
-        //oneInch.transfer(msg.sender, unStakeAmount);
     }
 
 
