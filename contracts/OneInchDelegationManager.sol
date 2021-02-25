@@ -268,6 +268,18 @@ contract OneInchDelegationManager is OneInchDelegationManagerStorages, OneInchDe
     }
 
 
+    ///----------------------------------
+    /// Getter methods
+    ///----------------------------------
+
+    /**
+     * @notice - Get delegated-amount of a delegator (for a delegatee)
+     */
+    function getDelegatedAmount(address delegatee, address delegator) public view returns (uint _delegatedAmount) {
+        return delegatedAmounts[address(delegatee)][delegator];
+    }
+
+
     ///-------------------------------------------------------------------------------------------------------------
     /// _getDelegationDataByType() method is always here. (in order to avoid that highlight of code become "white") 
     ///-------------------------------------------------------------------------------------------------------------
@@ -291,5 +303,6 @@ contract OneInchDelegationManager is OneInchDelegationManagerStorages, OneInchDe
     {
         return (checkpoints, checkpointsCounts, delegates);
     }
+
 
 }
