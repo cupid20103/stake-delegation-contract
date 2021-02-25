@@ -30,18 +30,24 @@ contract OneInchDelegationManager is OneInchDelegationManagerStorages, OneInchDe
      * @param delegatedAmount - 1INCH tokens amount delegated by a user (caller)  
      */ 
     function delegate(address delegatee, uint delegatedAmount) public returns (bool) {
+        /// Delegator
+        address delegator = msg.sender;
+
         /// Transfer 1INCH tokens into a delegatee address
-        oneInch.transferFrom(msg.sender, address(this), delegatedAmount);
+        oneInch.transferFrom(delegator, address(this), delegatedAmount);
         oneInch.transfer(delegatee, delegatedAmount);
 
         /// Register delegator address into the delegatee (the StakeDelegation contract)
         StakeDelegation stakeDelegation = StakeDelegation(delegatee);
-        stakeDelegation.registerDelegator(msg.sender, delegatedAmount, block.number);
+        stakeDelegation.registerDelegator(delegator, delegatedAmount, block.number);
 
         /// Delegate
-        _delegateByType(msg.sender, delegatee, DelegationType.STAKE);
-        _delegateByType(msg.sender, delegatee, DelegationType.VOTING_POWER);
-        _delegateByType(msg.sender, delegatee, DelegationType.REWARD_DISTRIBUTION);
+        _delegateByType(delegator, delegatee, DelegationType.STAKE);
+        _delegateByType(delegator, delegatee, DelegationType.VOTING_POWER);
+        _delegateByType(delegator, delegatee, DelegationType.REWARD_DISTRIBUTION);
+
+        /// Save delegated-amount of delegator (for delegatee)
+        delegatedAmounts[address(delegatee)][delegator] = delegatedAmount;
     }
     
     /**

@@ -101,7 +101,7 @@ contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents, Stak
 
         for (uint8 i=0; i < delegators.length; i++) {
             uint delegatedAmount;   /// [Todo]: Identify each delegator's delegated-amount
-            uint shareOfDelegatedAmount = delegatedAmount.div(oneInchBalanceOfStakeDelegationContract).mul(100);  /// [Note]: Compute share of delegated-amount of each delegator. Unit is (%) = e.g. 52%
+            uint shareOfDelegatedAmount = delegatedAmount.div(oneInchBalanceOfStakeDelegationContract).mul(100);  /// [Note]: Compute share of delegated-amount of each delegator. Unit is percentage (%)
             uint distributedRewardAmount = rewardAmount.mul(shareOfDelegatedAmount).div(100);
 
             oneInch.transfer(delegators[i], distributedRewardAmount);
