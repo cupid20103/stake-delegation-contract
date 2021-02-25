@@ -6,6 +6,7 @@ import { OneInch } from "./1inch/1inch-token/OneInch.sol";
 import { GovernanceMothership } from "./1inch/1inch-token-staked/st-1inch/GovernanceMothership.sol";
 import { MooniswapFactoryGovernance } from "./1inch/1inch-governance/governance/MooniswapFactoryGovernance.sol";
 import { GovernanceRewards } from "./1inch/1inch-governance/governance/GovernanceRewards.sol";
+import { OneInchDelegationManager } from "./OneInchDelegationManager.sol";
 
 
 /**
@@ -24,17 +25,19 @@ contract StakeDelegationFactory {
     GovernanceMothership public stOneInch;  /// st1INCH token
     MooniswapFactoryGovernance public mooniswapFactoryGovernance;  /// For voting
     GovernanceRewards public governanceRewards;                    /// For claiming rewards
+    OneInchDelegationManager public oneInchDelegationManager;
 
-    constructor(OneInch _oneInch, GovernanceMothership _stOneInch, MooniswapFactoryGovernance _mooniswapFactoryGovernance, GovernanceRewards _governanceRewards) public {
+    constructor(OneInch _oneInch, GovernanceMothership _stOneInch, MooniswapFactoryGovernance _mooniswapFactoryGovernance, GovernanceRewards _governanceRewards, OneInchDelegationManager _oneInchDelegationManager) public {
         oneInch = _oneInch;
         stOneInch = _stOneInch;
         mooniswapFactoryGovernance = _mooniswapFactoryGovernance;
         governanceRewards = _governanceRewards;
+        oneInchDelegationManager = _oneInchDelegationManager;
     }
 
     function createNewStakeDelegation() public returns (bool) {
         currentStakeDelegationId++;
-        StakeDelegation stakeDelegation = new StakeDelegation(oneInch, stOneInch, mooniswapFactoryGovernance, governanceRewards);
+        StakeDelegation stakeDelegation = new StakeDelegation(oneInch, stOneInch, mooniswapFactoryGovernance, governanceRewards, oneInchDelegationManager);
         stakeDelegations.push(address(stakeDelegation));
 
         emit StakeDelegationCreated(stakeDelegation);

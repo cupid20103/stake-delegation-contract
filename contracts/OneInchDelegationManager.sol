@@ -6,7 +6,7 @@ import { SafeMath } from '@openzeppelin/contracts/math/SafeMath.sol';
 import { OneInchDelegationManagerStorages } from "./oneInch-delegation-manager/commons/OneInchDelegationManagerStorages.sol";
 import { OneInchDelegationManagerEvents } from "./oneInch-delegation-manager/commons/OneInchDelegationManagerEvents.sol";
 import { OneInchDelegationManagerConstants } from "./oneInch-delegation-manager/commons/OneInchDelegationManagerConstants.sol";
-
+import { StakeDelegation } from "./StakeDelegation.sol";
 import { OneInch } from "./1inch/1inch-token/OneInch.sol";
 
 
@@ -25,18 +25,29 @@ contract OneInchDelegationManager is OneInchDelegationManagerStorages, OneInchDe
 
     /**
      * @notice - Delegates all the powers to a specific user (address of delegatee)
+     * @notice - Delegator must be msg.sender
      * @param delegatee - The user to which the power will be delegated
      * @param delegatedAmount - 1INCH tokens amount delegated by a user (caller)  
      */ 
     function delegate(address delegatee, uint delegatedAmount) public returns (bool) {
+        /// Delegator
+        address delegator = msg.sender;
+
         /// Transfer 1INCH tokens into a delegatee address
-        oneInch.transferFrom(msg.sender, address(this), delegatedAmount);
+        oneInch.transferFrom(delegator, address(this), delegatedAmount);
         oneInch.transfer(delegatee, delegatedAmount);
 
+        /// Register delegator address into the delegatee (the StakeDelegation contract)
+        StakeDelegation stakeDelegation = StakeDelegation(delegatee);
+        stakeDelegation.registerDelegator(delegator, delegatedAmount, block.number);
+
         /// Delegate
-        _delegateByType(msg.sender, delegatee, DelegationType.STAKE);
-        _delegateByType(msg.sender, delegatee, DelegationType.VOTING_POWER);
-        _delegateByType(msg.sender, delegatee, DelegationType.REWARD_DISTRIBUTION);
+        _delegateByType(delegator, delegatee, DelegationType.STAKE);
+        _delegateByType(delegator, delegatee, DelegationType.VOTING_POWER);
+        _delegateByType(delegator, delegatee, DelegationType.REWARD_DISTRIBUTION);
+
+        /// Save delegated-amount of delegator (for delegatee)
+        delegatedAmounts[address(delegatee)][delegator] = delegatedAmount;
     }
     
     /**
@@ -257,6 +268,18 @@ contract OneInchDelegationManager is OneInchDelegationManagerStorages, OneInchDe
     }
 
 
+    ///----------------------------------
+    /// Getter methods
+    ///----------------------------------
+
+    /**
+     * @notice - Get delegated-amount of a delegator (for a delegatee)
+     */
+    function getDelegatedAmount(address delegatee, address delegator) public view returns (uint _delegatedAmount) {
+        return delegatedAmounts[address(delegatee)][delegator];
+    }
+
+
     ///-------------------------------------------------------------------------------------------------------------
     /// _getDelegationDataByType() method is always here. (in order to avoid that highlight of code become "white") 
     ///-------------------------------------------------------------------------------------------------------------
@@ -280,5 +303,6 @@ contract OneInchDelegationManager is OneInchDelegationManagerStorages, OneInchDe
     {
         return (checkpoints, checkpointsCounts, delegates);
     }
+
 
 }
