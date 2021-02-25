@@ -82,14 +82,14 @@ contract("StakeDelegation", function(accounts) {
             GOVERNANCE_REWARDS = governanceRewards.address;
         });
 
-        it("Deploy the StakeDelegationFactory contract instance", async () => {
-            stakeDelegationFactory = await StakeDelegationFactory.new(ONEINCH, ST_ONEINCH,  MOONISWAP_FACTORY_GOVERNANCE, GOVERNANCE_REWARDS, { from: deployer });
-            STAKE_DELEGATION_FACTORY = stakeDelegationFactory.address;
-        });
-
         it("Deploy the OneInchDelegationManager contract instance", async () => {
             oneInchDelegationManager = await OneInchDelegationManager.new(ONEINCH,{ from: deployer });
             ONEINCH_DELEGATION_MANAGER = oneInchDelegationManager.address;
+        });
+
+        it("Deploy the StakeDelegationFactory contract instance", async () => {
+            stakeDelegationFactory = await StakeDelegationFactory.new(ONEINCH, ST_ONEINCH,  MOONISWAP_FACTORY_GOVERNANCE, GOVERNANCE_REWARDS, ONEINCH_DELEGATION_MANAGER, { from: deployer });
+            STAKE_DELEGATION_FACTORY = stakeDelegationFactory.address;
         });
     });
 

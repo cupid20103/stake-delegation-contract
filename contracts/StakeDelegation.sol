@@ -11,6 +11,7 @@ import { OneInch } from "./1inch/1inch-token/OneInch.sol";
 import { GovernanceMothership } from "./1inch/1inch-token-staked/st-1inch/GovernanceMothership.sol";
 import { MooniswapFactoryGovernance } from "./1inch/1inch-governance/governance/MooniswapFactoryGovernance.sol";
 import { GovernanceRewards } from "./1inch/1inch-governance/governance/GovernanceRewards.sol";
+import { OneInchDelegationManager } from "./OneInchDelegationManager.sol";
 
 
 /**
@@ -26,16 +27,20 @@ contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents, Stak
     GovernanceMothership public stOneInch;  /// st1INCH token
     MooniswapFactoryGovernance public mooniswapFactoryGovernance;  /// For voting
     GovernanceRewards public governanceRewards;                    /// For claiming rewards
+    OneInchDelegationManager public oneInchDelegationManager;
 
     address ST_ONEINCH;
+    address ONEINCH_DELEGATION_MANAGER;
 
-    constructor(OneInch _oneInch, GovernanceMothership _stOneInch, MooniswapFactoryGovernance _mooniswapFactoryGovernance, GovernanceRewards _governanceRewards) public {
+    constructor(OneInch _oneInch, GovernanceMothership _stOneInch, MooniswapFactoryGovernance _mooniswapFactoryGovernance, GovernanceRewards _governanceRewards, OneInchDelegationManager _oneInchDelegationManager) public {
         oneInch = _oneInch;
         stOneInch = _stOneInch;
         mooniswapFactoryGovernance = _mooniswapFactoryGovernance;
         governanceRewards = _governanceRewards;
+        oneInchDelegationManager = _oneInchDelegationManager;
 
         ST_ONEINCH = address(stOneInch);
+        ONEINCH_DELEGATION_MANAGER = address(oneInchDelegationManager);
     }
 
 
@@ -100,7 +105,9 @@ contract StakeDelegation is StakeDelegationStorages, StakeDelegationEvents, Stak
         uint oneInchBalanceOfStakeDelegationContract = oneInch.balanceOf(address(this));
 
         for (uint8 i=0; i < delegators.length; i++) {
-            uint delegatedAmount;   /// [Todo]: Identify each delegator's delegated-amount
+            address delegatee = address(this);
+            address delegator = delegators[i];
+            uint delegatedAmount = oneInchDelegationManager.getDelegatedAmount(delegatee, delegator);   /// [Todo]: Identify each delegator's delegated-amount
             uint shareOfDelegatedAmount = delegatedAmount.div(oneInchBalanceOfStakeDelegationContract).mul(100);  /// [Note]: Compute share of delegated-amount of each delegator. Unit is percentage (%)
             uint distributedRewardAmount = rewardAmount.mul(shareOfDelegatedAmount).div(100);
 
