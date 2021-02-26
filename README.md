@@ -11,7 +11,7 @@
 ***
 
 ## 【Workflow】
-- Diagram of workflow
+- Diagram of workflow  
   (※ Anyone can create the stake delegation contract that is process ① in the diagram below)
 ![【Diagram】A liquidity protocol stake delegation contract](https://user-images.githubusercontent.com/19357502/109258799-50924200-783e-11eb-92e5-e571be5bc90b.jpg)
 
@@ -70,7 +70,8 @@ $ ganache-cli -d
 
 ## 【References】
 - 1inch.exchange
-  - Prize on the EtherPunk: https://1inch-exchange.medium.com/1inch-supports-etherpunk-2021-hackathon-by-ethindia-5f659927b708
+  - Prize on the EtherPunk:  
+    https://1inch-exchange.medium.com/1inch-supports-etherpunk-2021-hackathon-by-ethindia-5f659927b708
 
   - Smart contract  
     - 1inch token staked (st1INCH):  
@@ -87,3 +88,10 @@ $ ganache-cli -d
       - GovernanceRewards.sol  
       - BaseRewards.sol   
         https://etherscan.io/address/0x0f85a912448279111694f4ba4f85dc641c54b594#code
+
+<br>
+
+- Aave v2 
+  - aave-token-v2: https://github.com/aave/aave-token-v2
+  - governance-v2: https://github.com/aave/governance-v2
+
