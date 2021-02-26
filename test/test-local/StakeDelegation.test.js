@@ -254,14 +254,14 @@ contract("StakeDelegation", function(accounts) {
 
             assert.equal(
                 String(web3.utils.fromWei(oneInchTokenBalance1)),
-                "750",
-                "1inch token balance of user1 should be 750 1INCH"
+                "500",
+                "1inch token balance of user1 should be 500 1INCH"
             );
 
             assert.equal(
                 String(web3.utils.fromWei(oneInchTokenBalance2)),
-                "750",
-                "1inch token balance of user2 should be 750 1INCH"
+                "500",
+                "1inch token balance of user2 should be 500 1INCH"
             );
         });
     });
