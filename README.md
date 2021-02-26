@@ -2,7 +2,7 @@
 
 ***
 ## 【Introduction of the A liquidity protocol stake delegation contract】
-- This is a smart contract that ...
+- This is a smart contract that: 
   - A contract should be able to vote on specific parameters in https://1inch.exchange/#/dao/governance for stake and vote delegation.
   - automatic 1inch reward distribution to stakers.
 
@@ -70,9 +70,6 @@ $ ganache-cli -d
 
 ## 【References】
 - 1inch.exchange
-  - Prize on the EtherPunk:  
-    https://1inch-exchange.medium.com/1inch-supports-etherpunk-2021-hackathon-by-ethindia-5f659927b708
-
   - Smart contract  
     - 1inch token staked (st1INCH):  
       - GovernanceMothership.sol  
@@ -88,6 +85,11 @@ $ ganache-cli -d
       - GovernanceRewards.sol  
       - BaseRewards.sol   
         https://etherscan.io/address/0x0f85a912448279111694f4ba4f85dc641c54b594#code
+
+<br>
+
+  - The concept of a liquidity protocol stake delegation contract (from the EtherPunk):  
+    https://1inch-exchange.medium.com/1inch-supports-etherpunk-2021-hackathon-by-ethindia-5f659927b708
 
 <br>
 
