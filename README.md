@@ -97,3 +97,6 @@ $ ganache-cli -d
   - aave-token-v2: https://github.com/aave/aave-token-v2
   - governance-v2: https://github.com/aave/governance-v2
 
+<br>
+
+- Compound (Governance): https://github.com/compound-finance/compound-protocol/tree/master/contracts/Governance
