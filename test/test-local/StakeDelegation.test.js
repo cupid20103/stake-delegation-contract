@@ -114,7 +114,7 @@ contract("StakeDelegation", function(accounts) {
     });
 
     describe("StakeDelegationFactory", () => {
-        it("a new StakeDelegation contract should be created", async () => {
+        it("User1 create a new StakeDelegation contract", async () => {
             txReceipt = await stakeDelegationFactory.createNewStakeDelegation({ from: user1 });
 
             /// [Note]: Retrieve an event log via web3.js v1.0.0
@@ -131,26 +131,7 @@ contract("StakeDelegation", function(accounts) {
     });
 
     describe("OneInchDelegationManager", () => {
-        it("user1 address should be delegated by the STAKE_DELEGATION_1 contract address", async () => {
-            /// [Note]: One of the StakeDelegation contract address (created by the StakeDelegationFactory contract) is assigned as a parameter of delegate() method
-            const delegatee = STAKE_DELEGATION_1;
-            const delegatedAmount = web3.utils.toWei('500', 'ether');
-            await oneInch.approve(ONEINCH_DELEGATION_MANAGER, delegatedAmount, { from: user1 });
-            txReceipt = await oneInchDelegationManager.delegate(delegatee, delegatedAmount, { from: user1 });
-
-            let events = await oneInchDelegationManager.getPastEvents('DelegateChanged', {
-                filter: {},  /// [Note]: If "index" is used for some event property, index number is specified
-                fromBlock: 0,
-                toBlock: 'latest'
-            });
-            console.log("\n=== Event log of DelegateChanged ===", events[0].returnValues);  /// [Result]: Successful to retrieve event log
-
-            /// Save block number
-            firstActionBlockNumber = await time.latestBlock();  /// Get the latest block number
-            console.log("\n=== firstActionBlockNumber ===", String(firstActionBlockNumber));
-        });
-
-        it("user2 address should be delegated by the STAKE_DELEGATION_1 contract address", async () => {
+        it("User2 address should be delegated by the STAKE_DELEGATION_1 contract address", async () => {
             /// [Note]: One of the StakeDelegation contract address (created by the StakeDelegationFactory contract) is assigned as a parameter of delegate() method
             const delegatee = STAKE_DELEGATION_1;
             const delegatedAmount = web3.utils.toWei('500', 'ether');
@@ -165,22 +146,41 @@ contract("StakeDelegation", function(accounts) {
             console.log("\n=== Event log of DelegateChanged ===", events[0].returnValues);  /// [Result]: Successful to retrieve event log
 
             /// Save block number
+            firstActionBlockNumber = await time.latestBlock();  /// Get the latest block number
+            console.log("\n=== firstActionBlockNumber ===", String(firstActionBlockNumber));
+        });
+
+        it("User3 address should be delegated by the STAKE_DELEGATION_1 contract address", async () => {
+            /// [Note]: One of the StakeDelegation contract address (created by the StakeDelegationFactory contract) is assigned as a parameter of delegate() method
+            const delegatee = STAKE_DELEGATION_1;
+            const delegatedAmount = web3.utils.toWei('500', 'ether');
+            await oneInch.approve(ONEINCH_DELEGATION_MANAGER, delegatedAmount, { from: user3 });
+            txReceipt = await oneInchDelegationManager.delegate(delegatee, delegatedAmount, { from: user3 });
+
+            let events = await oneInchDelegationManager.getPastEvents('DelegateChanged', {
+                filter: {},  /// [Note]: If "index" is used for some event property, index number is specified
+                fromBlock: 0,
+                toBlock: 'latest'
+            });
+            console.log("\n=== Event log of DelegateChanged ===", events[0].returnValues);  /// [Result]: Successful to retrieve event log
+
+            /// Save block number
             secondActionBlockNumber = await time.latestBlock();  /// Get the latest block number
             console.log("\n=== secondActionBlockNumber ===", String(secondActionBlockNumber));
         });
 
-        it("getPowerAtBlock of user1 should be 0", async () => {
-            const user = user1;
+        it("getPowerAtBlock of user2 should be 0", async () => {
+            const user = user2;
             const blockNumber = Number(String(firstActionBlockNumber));
             const delegationType = 0;  /// [Note]: "0" indicates "STAKE" that is defined in the DelegationType enum
-            const _powerAtBlock = await oneInchDelegationManager.getPowerAtBlock(user, blockNumber, delegationType, { from: user1 });
+            const _powerAtBlock = await oneInchDelegationManager.getPowerAtBlock(user, blockNumber, delegationType, { from: user2 });
             const powerAtBlock = web3.utils.fromWei(String(_powerAtBlock), 'ether');
             console.log("\n=== powerAtBlock of user1 ===", powerAtBlock);
 
             assert.equal(
                 powerAtBlock,
                 "0",
-                "PowerAtBlock of user1 should be 0"
+                "PowerAtBlock of user2 should be 0"
             );
         });
 
@@ -246,22 +246,22 @@ contract("StakeDelegation", function(accounts) {
             const txReceipt = await stakeDelegation1.delegateRewardDistributionWithUnStake(unStakeAmount, { from: user1 });            
         });
 
-        it("1inch token balance of both (user1 and user2) should be 750 1INCH", async () => {
-            const oneInchTokenBalance1 = await oneInch.balanceOf(user1, { from: user1 });
-            const oneInchTokenBalance2 = await oneInch.balanceOf(user2, { from: user2 });
-            console.log("\n=== oneInchTokenBalance of user1 ===", String(web3.utils.fromWei(oneInchTokenBalance1)));
-            console.log("\n=== oneInchTokenBalance of user2 ===", String(web3.utils.fromWei(oneInchTokenBalance2)));
+        it("1inch token balance of both (user2 and user3) should be 500 1INCH", async () => {
+            const oneInchTokenBalance1 = await oneInch.balanceOf(user2, { from: user2 });
+            const oneInchTokenBalance2 = await oneInch.balanceOf(user3, { from: user3 });
+            console.log("\n=== oneInchTokenBalance of user2 ===", String(web3.utils.fromWei(oneInchTokenBalance1)));
+            console.log("\n=== oneInchTokenBalance of user3 ===", String(web3.utils.fromWei(oneInchTokenBalance2)));
 
             assert.equal(
                 String(web3.utils.fromWei(oneInchTokenBalance1)),
                 "500",
-                "1inch token balance of user1 should be 500 1INCH"
+                "1inch token balance of user2 should be 500 1INCH"
             );
 
             assert.equal(
                 String(web3.utils.fromWei(oneInchTokenBalance2)),
                 "500",
-                "1inch token balance of user2 should be 500 1INCH"
+                "1inch token balance of user3 should be 500 1INCH"
             );
         });
     });
