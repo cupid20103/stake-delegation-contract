@@ -11,7 +11,8 @@
 ***
 
 ## 【Workflow】
-- 
+- Diagram of workflow
+![【Diagram】A liquidity protocol stake delegation contract](https://user-images.githubusercontent.com/19357502/109258799-50924200-783e-11eb-92e5-e571be5bc90b.jpg)
 
 
 &nbsp;
